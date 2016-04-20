@@ -64,3 +64,8 @@ bin/
 */bin/*
 src/bin/*
 src/bin/
+
+*~$*.docx
+*~$*.doc
+*~$*.xlsx
+*~$*.xls
