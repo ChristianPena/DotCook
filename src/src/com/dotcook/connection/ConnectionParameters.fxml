@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="400.0" maxWidth="650.0" minHeight="400.0" minWidth="650.0" prefHeight="400.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dotcook.connection.ConnectionParametersController">
+   <children>
+      <AnchorPane prefHeight="130.0" prefWidth="600.0" style="-fx-background-color: #FFF;">
+         <children>
+            <ImageView fx:id="logoView" fitHeight="104.0" fitWidth="255.0" layoutX="371.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label layoutX="57.0" layoutY="45.0" prefHeight="35.0" prefWidth="344.0" text="Parámetros de Conexión" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font name="Ubuntu Light" size="30.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="273.0" prefWidth="650.0">
+         <children>
+            <Label layoutX="12.0" layoutY="32.0" text="Servidor" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="355.0" layoutY="29.0" text="Puerto" AnchorPane.leftAnchor="410.0" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="inputServer" layoutX="100.0" layoutY="28.0" prefHeight="25.0" prefWidth="237.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="28.0" />
+            <PasswordField fx:id="inputPassword" layoutX="160.0" layoutY="168.0" prefHeight="25.0" prefWidth="237.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="178.0" />
+            <Button fx:id="actionCancel" layoutX="396.0" layoutY="141.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#actionCancel" prefWidth="100.0" text="Cancelar" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="140.0" />
+            <Button fx:id="actionSave" layoutX="499.0" layoutY="140.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#actionSave" prefWidth="100.0" text="Guardar" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+            <Label layoutX="25.0" layoutY="83.0" text="Base de Datos" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="80.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="inputDatabase" layoutX="143.0" layoutY="75.0" prefHeight="25.0" prefWidth="237.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="78.0" />
+            <Label layoutX="9.0" layoutY="118.0" text="Usuario" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="130.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="19.0" layoutY="128.0" text="Clave de acceso" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="180.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="inputUsername" layoutX="160.0" layoutY="120.0" prefHeight="25.0" prefWidth="237.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="128.0" />
+            <TextField fx:id="inputPort" layoutX="476.0" layoutY="28.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.topAnchor="28.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

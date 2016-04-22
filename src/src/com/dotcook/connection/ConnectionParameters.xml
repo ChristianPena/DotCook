@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<connection>
+	<parameters>
+		<server>localhost</server>
+		<port>3606</port>
+		<database>culinet_test</database>
+		<username>root</username>
+		<password></password>	
+	</parameters>
+</connection>
