@@ -25,7 +25,7 @@ public class DotCook extends Application{
 			
 			Scene scene = new Scene(root);
 			
-			stage.setTitle("DotCook: Sistema de Gestión de Restaurante");
+			stage.setTitle("DotCook: Sistema de Gestion de Restaurante");
 			stage.setScene(scene);
 			stage.initStyle(StageStyle.UNDECORATED);   
 			stage.setMinHeight(320);
@@ -39,11 +39,11 @@ public class DotCook extends Application{
 			
 			System.out.println("Connection failed!");
 			
-			Parent root = FXMLLoader.load(getClass().getResource("/com/dotCook/connection/ConnectionParameters.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/com/dotcook/connection/ConnectionParameters.fxml"));
 			
 			Scene scene = new Scene(root);
 			
-			stage.setTitle("DotCook: Sistema de Gestión de Restaurante");
+			stage.setTitle("DotCook: Sistema de Gestion de Restaurante");
 			stage.setScene(scene);
 			stage.initStyle(StageStyle.UNDECORATED);   
 			stage.setMinHeight(400);

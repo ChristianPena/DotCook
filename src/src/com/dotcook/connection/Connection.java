@@ -94,7 +94,7 @@ public class Connection {
 		if(conn != null) {
 			try {
 				setStatus(true);
-				setMessage("ConexiÃ³n establecida");				
+				setMessage("Conexión establecida");				
 			}
 			catch(Exception e) {
 				setStatus(false);

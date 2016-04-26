@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -47,6 +49,11 @@ public class LoginController implements Initializable{
 		}else{
 			
 			System.out.println("Usuario y/o clave incorrectos");
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("No se puede iniciar sesión");
+			alert.setContentText("Usuario y/o clave incorrectos");
+			alert.showAndWait();
 			
 		}
 		
@@ -54,7 +61,7 @@ public class LoginController implements Initializable{
 	}
 	
 	public void setImageLogo(){		
-		Image img = new Image("/com/culinet/resources/logo/logo.png");
+		Image img = new Image("/com/dotcook/resources/logo/logo.png");
 		setLogoView(img);		
 	}
 	

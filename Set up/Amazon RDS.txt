@@ -4,3 +4,4 @@ Master Username 	= sqladmin
 
 Master Password		= sqlRoot2016
 
+END-POINT		= dbroot.coyaws5zm90v.us-west-2.rds.amazonaws.com

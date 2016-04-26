@@ -18,7 +18,7 @@ public class Login extends Connection{
 		super.openConnection();		
 		ResultSet rs;
 		try{
-			String sql = "SELECT A.ID_USER, B.ID_PASSWORD, A.IS_ENABLED "+
+			String sql = "SELECT A.ID_USER, A.IS_ENABLED "+
 						   "FROM USER AS A INNER JOIN PASSWORD AS B "+
 							 "ON A.ID_USER    = B.ID_USER "+
 						  "WHERE A.ID_USER    = '" + username + "' "+

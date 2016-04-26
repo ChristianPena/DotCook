@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -22,6 +24,7 @@ public class ConnectionParametersController implements Initializable{
 	@FXML PasswordField inputPassword;
 	@FXML Button actionCancel;
 	@FXML Button actionAccess;
+	@FXML Button actionTest;
 	ConnectionParameters connParams;
 
 	@Override
@@ -51,12 +54,43 @@ public class ConnectionParametersController implements Initializable{
 								   getUsername(), 
 								   getPassword());
 		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Diálogo de Información");
+		alert.setHeaderText("Parámetros de conexión grabados satisfactoriamente");
+		alert.setContentText("Vuelva a iniciar DotCook!");
+		alert.showAndWait();
+		
 		System.exit(0);
 		
 	}
 	
+	@FXML
+	public void actionTest(Event event){
+		
+		Connection conn = new Connection();
+		
+		if(conn.testConnection(getDatabase(), getUsername(), getPassword(), getServer(), getPort())==true){
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Diálogo de Información");
+			alert.setHeaderText(null);
+			alert.setContentText("Conexión establecida");
+			alert.showAndWait();
+			
+		} else {
+			
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Diálogo de Información");
+			alert.setHeaderText(null);
+			alert.setContentText("No se ha podido establecer la conexión");
+			alert.showAndWait();
+			
+		}
+		
+	}
+	
 	public void setImageLogo(){		
-		Image img = new Image("/com/culinet/resources/logo/logo.png");
+		Image img = new Image("/com/dotcook/resources/logo/logo.png");
 		setLogoView(img);		
 	}
 	
