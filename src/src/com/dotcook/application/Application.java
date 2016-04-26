@@ -1,7 +1,19 @@
+/**
+ * ---------------------------------------------------------------------------------- *
+ * CLASS APPLICATION
+ * ---------------------------------------------------------------------------------- *
+ * 	
+ * ---------------------------------------------------------------------------------- *
+ *	@author Christian Pena
+ *  @version 0.1 2016-04-26
+ * ---------------------------------------------------------------------------------- */
 package com.dotcook.application;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Application extends com.dotcook.connection.Connection{
 	
@@ -10,16 +22,19 @@ public class Application extends com.dotcook.connection.Connection{
 	private String description;
 	private String source;
 	
+	private ObservableList<Application> apps;
+	
 	public Application(){
 		super();
 	}
 	
-	
-	public Application[] getApplication(String idUser){
+/** Set the applications authorized for the user idUser
+ * @param idUser
+ * @return ObservableList<Application> List with the applications for the user
+ */
+	public void setApplications(String idUser){
 		
-		Application apps[] = null;
-		
-		apps = new Application[10];		
+		ObservableList<Application> apps = FXCollections.observableArrayList();
 		
 		try{
 			
@@ -28,17 +43,15 @@ public class Application extends com.dotcook.connection.Connection{
 			CallableStatement stmt = super.conn.prepareCall(sql);
 			stmt.setString(1, idUser);
 			ResultSet rs = stmt.executeQuery();
-			
-			int i = 0;
-			
+						
 			while(rs.next()){
 				
-				apps[i] = new Application();
-				apps[i].setIdApplication(rs.getInt("ID_APPLICATION"));
-				apps[i].setNameApplication(rs.getString("NAME_APPLICATION"));
-				apps[i].setDescription(rs.getString("DESCRIPTION"));
-				apps[i].setSource(rs.getString("SOURCE"));				
-				i++;
+				Application app = new Application();
+				app.setIdApplication(rs.getInt("ID_APPLICATION"));
+				app.setNameApplication(rs.getString("NAME_APPLICATION"));
+				app.setDescription(rs.getString("DESCRIPTION"));
+				app.setSource(rs.getString("SOURCE"));
+				apps.add(app);
 				
 			}
 			
@@ -51,8 +64,25 @@ public class Application extends com.dotcook.connection.Connection{
 			
 		}		
 		
+	}
+	
+	public ObservableList<Application> getApplications(){
 		return apps;
 	}
+	
+	public void setApplication(int idApplication){
+		
+		for(Application app : apps){
+			if(app.getIdApplication() == idApplication){
+				this.setIdApplication(app.getIdApplication());
+				this.setNameApplication(app.getNameApplication());
+				this.setDescription(app.getDescription());
+				this.setSource(app.getSource());
+			}
+		}
+		
+	}
+	
 
 	public int getIdApplication() {
 		return idApplication;
