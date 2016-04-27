@@ -3,6 +3,7 @@ package com.dotcook.main;
 import java.io.IOException;
 
 import com.dotcook.connection.Connection;
+import com.dotcook.resources.Properties;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +17,10 @@ public class DotCook extends Application{
 	@Override
 	public void start(Stage stage) throws IOException{
 		
+		Properties prop = new Properties();
 		Connection conn = new Connection();
 		conn.openConnection();
+		prop.setProp();
 		
 		if(conn.checkConnection() == true ){
 			
@@ -25,7 +28,8 @@ public class DotCook extends Application{
 			
 			Scene scene = new Scene(root);
 			
-			stage.setTitle("DotCook: Sistema de Gestion de Restaurante");
+			stage.setTitle(prop.getPropertyValue("main.title"));
+			prop.closeInput();
 			stage.setScene(scene);
 			stage.initStyle(StageStyle.UNDECORATED);   
 			stage.setMinHeight(320);

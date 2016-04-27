@@ -1,18 +1,26 @@
 package com.dotcook.main;
 
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class Main extends BorderPane{
 	
-	private VBox topPane = null;
+	private HBox topPane = null;
 	private Node centerPane = null;
-	private HBox bottomPane = null;
+	private VBox bottomPane = null;
 	
-	public Main(){
-		
+//  Top Pane objects
+	private ToolBar toolbar;
+	private ImageView viewLogo;
+	private Image logo;
+	
+	public Main(){		
 		
 		setTopPane();
 		setCenterPane();
@@ -23,24 +31,29 @@ public class Main extends BorderPane{
 		setBottom(getBottomPane());
 	}
 	
-	public VBox getTopPane() {
+	public HBox getTopPane() {
 		return topPane;
 	}
 
 	public void setTopPane() {
 		
-		VBox topPane = new VBox();																	
+		HBox topPane = new HBox(2);		
+		
+		setToolbar();
+		setViewLogo();
+		
+		topPane.getChildren().addAll(getToolbar(),getViewLogo());
 		
 		this.topPane = topPane;
 	}
-	
-	public HBox getBottomPane() {
+		
+	public VBox getBottomPane() {
 		return bottomPane;
 	}
 
 	public void setBottomPane() {
 		
-		HBox bottomPane = new HBox();
+		VBox bottomPane = new VBox();
 		
 		this.bottomPane = bottomPane;
 	}
@@ -52,6 +65,47 @@ public class Main extends BorderPane{
 	public void setCenterPane() {
 		Node centerPane = null;
 		this.centerPane = centerPane;
+	}
+
+	public ToolBar getToolbar() {
+		return toolbar;
+	}
+
+	public void setToolbar() {
+		
+		ToolBar toolbar = new ToolBar(
+			new Button("New"),
+			new Button("Open"),
+			new Button("Save")
+		);
+		
+		toolbar.setPrefWidth(getMaxWidth());
+		
+		this.toolbar = toolbar;
+	}
+
+	public ImageView getViewLogo() {
+		return viewLogo;
+	}
+
+	public void setViewLogo() {
+		
+		ImageView viewLogo = new ImageView();
+		
+		setLogo();
+		viewLogo.setImage(getLogo());
+		
+		this.viewLogo = viewLogo;
+		
+	}
+
+	public Image getLogo() {
+		return logo;
+	}
+
+	public void setLogo() {
+		Image logo = new Image(Main.class.getResourceAsStream("/com/dotcook/resources/logo/logo.png"));
+		this.logo = logo;
 	}	
 
 }
