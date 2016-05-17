@@ -1,15 +1,39 @@
 package com.dotcook.resources;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class Properties{
 	
 	private java.util.Properties prop;
-	private InputStream input = null;
-	
 	
 	public Properties(){
 		
+	}
+		
+	public java.util.Properties getProp() {
+		return prop;
+	}
+
+	public void setProp() {
+		
+		java.util.Properties prop = new java.util.Properties();	
+		
+		try{
+						
+			File file = new File("src/com/dotcook/resources/spanish.properties");
+			InputStream input = new FileInputStream(file);
+						
+			prop.load(input);
+			
+		} catch(Exception ex) {
+			
+			ex.printStackTrace();
+			
+		}
+		
+		this.prop = prop;
 	}
 	
 	public String getPropertyValue(String property){
@@ -27,50 +51,7 @@ public class Properties{
 		
 		return propertyValue;
 	}
-	
-	public void closeInput(){
-		
-		try{			
-			if(getInput()!=null){
-				getInput().close();
-			}
-			
-		} catch(Exception ex){
-			
-			ex.printStackTrace();
-			
-		}
-	}
 
-	public java.util.Properties getProp() {
-		return prop;
-	}
 
-	public void setProp() {
-		
-		java.util.Properties prop = new java.util.Properties();	
-		
-		try{
-			
-			setInput("spanish.properties");
-			getProp().load(getInput());
-			
-		} catch(Exception ex) {
-			
-			ex.printStackTrace();
-			
-		}
-		
-		this.prop = prop;
-	}
-
-	public InputStream getInput() {
-		return input;
-	}
-
-	public void setInput(String filename) {
-		InputStream input = this.getClass().getClassLoader().getResourceAsStream(filename);
-		this.input = input;
-	}
 
 }

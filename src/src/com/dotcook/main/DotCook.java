@@ -2,6 +2,7 @@ package com.dotcook.main;
 
 import java.io.IOException;
 
+
 import com.dotcook.connection.Connection;
 import com.dotcook.resources.Properties;
 
@@ -20,8 +21,9 @@ public class DotCook extends Application{
 		Properties prop = new Properties();
 		Connection conn = new Connection();
 		conn.openConnection();
-		prop.setProp();
 		
+		prop.setProp();
+				
 		if(conn.checkConnection() == true ){
 			
 			Parent root = FXMLLoader.load(getClass().getResource("/com/dotcook/login/Login.fxml"));
@@ -29,7 +31,6 @@ public class DotCook extends Application{
 			Scene scene = new Scene(root);
 			
 			stage.setTitle(prop.getPropertyValue("main.title"));
-			prop.closeInput();
 			stage.setScene(scene);
 			stage.initStyle(StageStyle.UNDECORATED);   
 			stage.setMinHeight(320);
