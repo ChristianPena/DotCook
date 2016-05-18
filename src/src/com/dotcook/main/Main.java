@@ -132,8 +132,8 @@ public class Main extends BorderPane{
 		
 		setLogo();
 		viewLogo.setImage(getLogo());
-		viewLogo.setFitWidth(180);
-		viewLogo.setFitHeight(73.41);
+		viewLogo.setFitWidth(159.38);
+		viewLogo.setFitHeight(65);
 		
 		this.viewLogo = viewLogo;
 		
