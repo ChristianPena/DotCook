@@ -67,10 +67,9 @@ public class LoginController implements Initializable{
 			
 			Stage currentStage = (Stage) actionAccess.getScene().getWindow();
 						
-			Main main = new Main();			
-			
-			main.setUser(this.inputUsername.getText());
-			
+			Main main = new Main();
+			main.init(this.inputUsername.getText());
+						
 			Scene scene = new Scene(main);
 			
 			Stage stage = new Stage();

@@ -23,7 +23,7 @@ public class Main extends BorderPane{
 	
 	private HBox topPane = null;
 	private Node centerPane = null;
-	private VBox bottomPane = null;
+	private ToolBar bottomPane = null;
 	
 //  Top Pane objects
 	private VBox leftTopPane;
@@ -32,6 +32,7 @@ public class Main extends BorderPane{
 	private ImageView viewLogo;
 	private Image logo;
 	private String appTitle;
+	private Label labelAppTitle;
 	
 //  Other objects
 	private Double sizeHeight;
@@ -41,17 +42,25 @@ public class Main extends BorderPane{
 	private Application app;
 	private ObservableList<Application> apps;
 	
-	public Main(){
+	public Main(){		
+		
+	}
+	
+	public void init(String idUser){
 		
 		getScreenSize();
+		setUser(idUser);
+		setApps();
+		setApp(1);
 		
 		setTopPane();
 		setCenterPane(getApp());
-		setBottomPane();	
+		setBottomPane();
 		
 		setTop(getTopPane());
 		setCenter(getCenterPane());
 		setBottom(getBottomPane());
+		
 	}
 	
 	public HBox getTopPane() {
@@ -70,16 +79,17 @@ public class Main extends BorderPane{
 		this.topPane = topPane;
 	}
 		
-	public VBox getBottomPane() {
+	public ToolBar getBottomPane() {
 		return bottomPane;
 	}
 
 	public void setBottomPane() {
 		
-		VBox bottomPane = new VBox();
+		ToolBar bottomPane = new ToolBar();
 		
 		bottomPane.setMinWidth(getSizeWidth());
 		
+		bottomPane.getItems().add(new Label("Status"));		
 		
 		this.bottomPane = bottomPane;
 	}
@@ -96,11 +106,16 @@ public class Main extends BorderPane{
 			this.setCenter(null);
 			
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(app.getSource()));
-			centerPane = (Node) fxmlLoader.load();
-			setAppTitle(app.getDescription());
+			
+			centerPane = (BorderPane) fxmlLoader.load();
+			
+			getLabelAppTitle().setText(app.getDescription());			
+						
 			this.setCenter(centerPane);
 			
 		}catch(Exception e){
+			
+			e.printStackTrace();
 			
 		}
 		
@@ -198,13 +213,15 @@ public class Main extends BorderPane{
 		
 		ToolBar appTitleBar = new ToolBar();
 		
+		setLabelAppTitle();
+		
 		setAppTitle("App.Title");
 		
-		Label labelTitle = new Label(getAppTitle());
+		setAppTitle(getAppTitle());
 		
-		labelTitle.setFont(new Font("Arial",20));
+		getLabelAppTitle().setFont(new Font("Arial",20));
 		
-		appTitleBar.getItems().add(labelTitle);
+		appTitleBar.getItems().add(getLabelAppTitle());
 		
 		this.appTitleBar = appTitleBar;
 	}
@@ -237,6 +254,20 @@ public class Main extends BorderPane{
 	public Application getApp(){
 		return app;
 	}
+	
+	public void setApp(Application app){
+		this.app = app;
+	}
+	
+	public void setApp(int idApp){
+		
+		for(Application app : getApps()){
+			if(app.getIdApplication() == idApp){
+				setApp(app);
+			}
+		}
+		
+	}
 
 	public ObservableList<Application> getApps() {
 		return apps;
@@ -246,6 +277,33 @@ public class Main extends BorderPane{
 		this.apps = apps;
 	}
 	
+	public void setApps() {
+		
+		ObservableList<Application> apps = null;
+		Application app = new Application();
+		
+		app.setApplications(getUser().getIdUser());
+		apps = app.getApplications();
+		
+		this.apps = apps;
+	}
+
+	public Label getLabelAppTitle() {
+		return labelAppTitle;
+	}
+	
+	public void setLabelAppTitle() {
+		Label labelAppTitle = new Label();
+		this.labelAppTitle = labelAppTitle;
+	}
+
+	public void setLabelAppTitle(Label labelAppTitle) {
+		this.labelAppTitle = labelAppTitle;
+	}
+	
+	public void setLabelAppTitle(String appTitle) {
+		getLabelAppTitle().setText(appTitle);
+	}
 	
 
 }

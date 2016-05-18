@@ -21,6 +21,9 @@ public class Application extends com.dotcook.connection.Connection{
 	private String nameApplication;
 	private String description;
 	private String source;
+	private int idCategory;
+	private String nameCategory;
+	private String descriptionCategory;
 	
 	private ObservableList<Application> apps;
 	
@@ -51,9 +54,14 @@ public class Application extends com.dotcook.connection.Connection{
 				app.setNameApplication(rs.getString("NAME_APPLICATION"));
 				app.setDescription(rs.getString("DESCRIPTION"));
 				app.setSource(rs.getString("SOURCE"));
+				app.setIdCategory(rs.getInt("ID_CATEGORY"));
+				app.setNameCategory(rs.getString("NAME_CATEGORY"));
+				app.setDescriptionCategory(rs.getString("DESCRIPTION_CATEGORY"));
 				apps.add(app);
 				
 			}
+			
+			this.apps = apps;
 			
 			rs.close();
 			super.closeConnection();
@@ -78,6 +86,9 @@ public class Application extends com.dotcook.connection.Connection{
 				this.setNameApplication(app.getNameApplication());
 				this.setDescription(app.getDescription());
 				this.setSource(app.getSource());
+				this.setIdCategory(app.getIdCategory());
+				this.setNameCategory(app.getNameCategory());
+				this.setDescriptionCategory(app.getDescriptionCategory());
 			}
 		}
 		
@@ -114,6 +125,30 @@ public class Application extends com.dotcook.connection.Connection{
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public int getIdCategory() {
+		return idCategory;
+	}
+
+	public void setIdCategory(int idCategory) {
+		this.idCategory = idCategory;
+	}
+
+	public String getNameCategory() {
+		return nameCategory;
+	}
+
+	public void setNameCategory(String nameCategory) {
+		this.nameCategory = nameCategory;
+	}
+
+	public String getDescriptionCategory() {
+		return descriptionCategory;
+	}
+
+	public void setDescriptionCategory(String descriptionCategory) {
+		this.descriptionCategory = descriptionCategory;
 	}
 
 }
