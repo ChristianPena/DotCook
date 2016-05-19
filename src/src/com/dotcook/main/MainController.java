@@ -1,6 +1,5 @@
 package com.dotcook.main;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -10,9 +9,7 @@ import com.dotcook.user.User;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -31,25 +28,12 @@ public class MainController implements Initializable {
 	private Application app;
 	private ObservableList<Application> apps;
 	
-	FXMLLoader loader = null;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
-		
-		try {
-			
-			loader = new FXMLLoader(location);
-			
-			Parent parent = (Parent) loader.load();
-			
-			setProp();		
-			fillLeftMenu();
-			
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-		
+						
+		setProp();		
+		fillLeftMenu();
+
 	}
 	
 	public void fillLeftMenu(){
