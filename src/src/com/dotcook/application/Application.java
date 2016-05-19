@@ -24,6 +24,9 @@ public class Application extends com.dotcook.connection.Connection{
 	private int idCategory;
 	private String nameCategory;
 	private String descriptionCategory;
+	private String controller;
+	private ObservableList<ToolbarApplication> tool;
+	private ObservableList<ToolbarApplication> toolbarApplication;	
 	
 	private ObservableList<Application> apps;
 	
@@ -31,10 +34,6 @@ public class Application extends com.dotcook.connection.Connection{
 		super();
 	}
 	
-/** Set the applications authorized for the user idUser
- * @param idUser
- * @return ObservableList<Application> List with the applications for the user
- */
 	public void setApplications(String idUser){
 		
 		ObservableList<Application> apps = FXCollections.observableArrayList();
@@ -57,6 +56,7 @@ public class Application extends com.dotcook.connection.Connection{
 				app.setIdCategory(rs.getInt("ID_CATEGORY"));
 				app.setNameCategory(rs.getString("NAME_CATEGORY"));
 				app.setDescriptionCategory(rs.getString("DESCRIPTION_CATEGORY"));
+				app.setController(rs.getString("CONTROLLER"));
 				apps.add(app);
 				
 			}
@@ -65,6 +65,23 @@ public class Application extends com.dotcook.connection.Connection{
 			
 			rs.close();
 			super.closeConnection();
+			
+			ToolbarApplication tool = new ToolbarApplication();
+			tool.getData(idUser);
+			setToolbarApplication(tool.getToolbarApplication());
+			
+			for(Application a : getApplications()){
+				
+				ObservableList<ToolbarApplication> tools = FXCollections.observableArrayList();
+				
+				for(ToolbarApplication t : getToolbarApplication()){
+					if(a.getIdApplication() == t.getIdApplication()){						
+						tools.add(t);						
+					}
+				}
+				
+				a.setTool(tools);
+			}
 				
 		} catch(Exception e){
 			
@@ -89,6 +106,7 @@ public class Application extends com.dotcook.connection.Connection{
 				this.setIdCategory(app.getIdCategory());
 				this.setNameCategory(app.getNameCategory());
 				this.setDescriptionCategory(app.getDescriptionCategory());
+				this.setController(app.getController());
 			}
 		}
 		
@@ -149,6 +167,30 @@ public class Application extends com.dotcook.connection.Connection{
 
 	public void setDescriptionCategory(String descriptionCategory) {
 		this.descriptionCategory = descriptionCategory;
+	}
+
+	public String getController() {
+		return controller;
+	}
+
+	public void setController(String controller) {
+		this.controller = controller;
+	}
+
+	public ObservableList<ToolbarApplication> getToolbarApplication() {
+		return toolbarApplication;
+	}
+
+	public void setToolbarApplication(ObservableList<ToolbarApplication> toolbarApplication) {
+		this.toolbarApplication = toolbarApplication;
+	}
+
+	public ObservableList<ToolbarApplication> getTool() {
+		return tool;
+	}
+
+	public void setTool(ObservableList<ToolbarApplication> tool) {
+		this.tool = tool;
 	}
 
 }
