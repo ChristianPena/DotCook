@@ -3,27 +3,35 @@ package com.dotcook.main;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import com.dotcook.application.Application;
 import com.dotcook.application.ToolbarApplication;
 import com.dotcook.resources.Properties;
+import com.dotcook.session.Session;
 import com.dotcook.user.User;
 
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public class Main extends BorderPane{
 	
@@ -45,6 +53,7 @@ public class Main extends BorderPane{
 	private Double sizeWidth;
 	
 //  Main ToolBar buttons
+	private Button btnSave;
 	private Button btnBack;
 	private Button btnFinish;
 	private Button btnCancel;
@@ -59,6 +68,13 @@ public class Main extends BorderPane{
 	private ObservableList<Application> steps;
 	private Properties prop;
 	private FXMLLoader fxmlLoader = null;
+	private Session session;
+	
+//  Bottom Pane Objects
+	private Label statusMessage;
+	private Label hostname;
+	private Label servername;
+	private Label username;
 	
 	public Main(){		
 		
@@ -67,6 +83,10 @@ public class Main extends BorderPane{
 	public void init(String idUser){
 		
 		steps = FXCollections.observableArrayList();
+		
+		Session session = new Session();
+		session.createSession(idUser);
+		setSession(session);
 		
 		getScreenSize();
 		setProp();
@@ -81,8 +101,8 @@ public class Main extends BorderPane{
 		
 		setTop(getTopPane());
 		setCenter(getCenterPane());
-		setBottom(getBottomPane());
-		
+		setBottom(getBottomPane());		
+				
 	}
 	
 	public HBox getTopPane() {
@@ -111,9 +131,37 @@ public class Main extends BorderPane{
 		
 		bottomPane.setMinWidth(getSizeWidth());
 		
-		bottomPane.getItems().add(new Label("Status"));		
+		initBottomLabels();
+		
+		bottomPane.getItems().addAll(getStatusMessage(), new Separator(), getServername(), new Separator(), 
+									 getHostname(), new Separator(), getUsername());		
 		
 		this.bottomPane = bottomPane;
+	}
+
+	private void initBottomLabels() {
+		
+		Double sizeLabels = 0.0;
+		Label statusMessage = new Label();
+		Label servername = new Label(getSession().getServername());
+		Label hostname = new Label(getSession().getHostname());		
+		Label username = new Label(getSession().getUsername());		
+		
+		servername.setMinWidth(100);
+		hostname.setMinWidth(100);
+		username.setMinWidth(100);		
+		
+		sizeLabels = hostname.getMinWidth() 
+				   + servername.getMinWidth() 
+				   + username.getMinWidth() 
+				   + 60;
+		
+		statusMessage.setMinWidth(getSizeWidth() - sizeLabels);
+		
+		setStatusMessage(statusMessage);
+		setHostname(hostname);
+		setServername(servername);
+		setUsername(username);
 	}
 
 	public Node getCenterPane() {
@@ -149,16 +197,16 @@ public class Main extends BorderPane{
 			
 			Object controller = classController.newInstance();
 			
-			method = classController.getDeclaredMethod("setUser", paramUser);			
+			method = classController.getSuperclass().getDeclaredMethod("setUser", paramUser);			
 			method.invoke(controller, getUser());
 			
-			method = classController.getDeclaredMethod("setApp", paramApp);
+			method = classController.getSuperclass().getDeclaredMethod("setApp", paramApp);
 			method.invoke(controller, getApp());
 			
-			method = classController.getDeclaredMethod("setApps", paramApps);
+			method = classController.getSuperclass().getDeclaredMethod("setApps", paramApps);
 			method.invoke(controller, getApps());
 			
-			method = classController.getDeclaredMethod("setProp", paramProp);
+			method = classController.getSuperclass().getDeclaredMethod("setProp", paramProp);
 			method.invoke(controller, getProp());
 			
 			fxmlLoader.setController(controller);
@@ -200,37 +248,59 @@ public class Main extends BorderPane{
 		
 		setEnabledToolbar();
 		
-		ToolBar toolbar = new ToolBar(getBtnBack(),getBtnFinish(),getBtnCancel(),getBtnPrint(),
-									  getBtnSearch(),getBtnHelp(),getBtnSys());		
+		ToolBar toolbar = new ToolBar(getBtnSave(),getBtnBack(),getBtnFinish(),getBtnCancel(),
+									  getBtnPrint(),getBtnSearch(),getBtnHelp(),getBtnSys());		
 		
 		this.toolbar = toolbar;
 	}
 
 	private void initButtonsToolbar() {
 		
-		Button btnBack = new Button(getProp().getPropertyValue("toolbar.back"));		
+		Button btnSave = new Button(getProp().getPropertyValue("toolbar.save"));
+		btnSave.setGraphic(getImageButton("save"));
+		setBtnSave(btnSave);
+		
+		Button btnBack = new Button(getProp().getPropertyValue("toolbar.back"));
+		btnBack.setGraphic(getImageButton("back"));
 		setBtnBack(btnBack);
 		
 		Button btnFinish = new Button(getProp().getPropertyValue("toolbar.finish"));
+		btnFinish.setGraphic(getImageButton("finish"));
 		setBtnFinish(btnFinish);
 		
 		Button btnCancel = new Button(getProp().getPropertyValue("toolbar.cancel"));
+		btnCancel.setGraphic(getImageButton("cancel"));
 		setBtnCancel(btnCancel);
 		
 		Button btnPrint = new Button(getProp().getPropertyValue("toolbar.print"));
+		btnPrint.setGraphic(getImageButton("print"));
 		setBtnPrint(btnPrint);
 		
 		Button btnSearch = new Button(getProp().getPropertyValue("toolbar.search"));
+		btnSearch.setGraphic(getImageButton("search"));
 		setBtnSearch(btnSearch);
 		
 		Button btnHelp = new Button(getProp().getPropertyValue("toolbar.help"));
+		btnHelp.setGraphic(getImageButton("help"));
 		setBtnHelp(btnHelp);
 		
 		Button btnSys = new Button(getProp().getPropertyValue("toolbar.sys"));
+		btnSys.setGraphic(getImageButton("system"));
 		setBtnSys(btnSys);
 				
 	}
 	
+	private ImageView getImageButton(String button) {
+		
+		String imgSource = "/com/dotcook/resources/icons/" + button + "_32x32.png";
+		
+		Image img = new Image(getClass().getResourceAsStream(imgSource));
+		
+		ImageView imgView = new ImageView(img);
+		
+		return imgView;
+	}
+
 	public void setActionToolbar(){
 		
 		EventHandler<ActionEvent> eHandler = new EventHandler<ActionEvent>(){
@@ -298,6 +368,13 @@ public class Main extends BorderPane{
 			
 			switch(tool.getIdButton()){
 			
+			case "SAVE":
+				if(tool.isEnabled()==true)
+					getBtnSave().setDisable(false);
+				else
+					getBtnSave().setDisable(true);
+				break;
+			
 			case "BACK":
 				if(tool.isEnabled()==true)
 					getBtnBack().setDisable(false);
@@ -355,8 +432,8 @@ public class Main extends BorderPane{
 		
 		setLogo();
 		viewLogo.setImage(getLogo());
-		viewLogo.setFitWidth(159.38);
-		viewLogo.setFitHeight(65);
+		viewLogo.setFitWidth(196.15);
+		viewLogo.setFitHeight(80);
 		
 		this.viewLogo = viewLogo;
 		
@@ -522,7 +599,15 @@ public class Main extends BorderPane{
 		prop.setProp();
 		this.prop = prop;
 	}
+	
+	public Button getBtnSave() {
+		return btnSave;
+	}
 
+	public void setBtnSave(Button btnSave) {
+		this.btnSave = btnSave;
+	}
+	
 	public Button getBtnBack() {
 		return btnBack;
 	}
@@ -613,6 +698,115 @@ public class Main extends BorderPane{
 		
 		return lastStep;
 	}
+
+	public Label getStatusMessage() {
+		return statusMessage;
+	}
+
+	public void setStatusMessage(Label statusMessage) {
+		this.statusMessage = statusMessage;
+	}
 	
+	public void setStatusMessage(String txt, char typ) {
+		
+		String imgSource = "/com/dotcook/resources/icons/";
+		
+		switch(typ){
+		
+		case 'S': 
+			imgSource = imgSource + "success.png";
+			break;
+		
+		case 'W':
+			imgSource = imgSource + "warning.png";
+			break;
+			
+		case 'E':
+			imgSource = imgSource + "error.png";
+			break;
+		
+		case 'I':
+			imgSource = imgSource + "information.png";
+			break;
+			
+		default:			
+			imgSource = imgSource + "null.png";
+			break;
+		
+		}
+		
+		if(!(getStatusMessage().getText()).equals("")){
+			
+			FadeTransition fadeOut = new FadeTransition(Duration.millis(175));
+			fadeOut.setNode(getStatusMessage());
+			fadeOut.setFromValue(1.0);
+		    fadeOut.setToValue(0.0);
+		    fadeOut.setCycleCount(1);
+		    fadeOut.setAutoReverse(false);
+		    fadeOut.playFromStart();
+			
+		}
+		
+		Image img = new Image(getClass().getResourceAsStream(imgSource));
+		getStatusMessage().setGraphic(new ImageView(img));
+		getStatusMessage().setText(txt);
+		
+		FadeTransition fadeIn = new FadeTransition(Duration.millis(175));
+		fadeIn.setNode(getStatusMessage());
+		fadeIn.setFromValue(0.0);
+	    fadeIn.setToValue(1.0);
+	    fadeIn.setCycleCount(1);
+	    fadeIn.setAutoReverse(false);
+	    fadeIn.playFromStart();
+		
+		System.out.println("(" + typ + ") " + txt);		
+		
+	}
+
+	public Label getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(Label hostname) {
+		this.hostname = hostname;
+	}
+
+	public Label getServername() {
+		return servername;
+	}
+
+	public void setServername(Label servername) {
+		this.servername = servername;
+	}
+
+	public Label getUsername() {
+		return username;
+	}
+
+	public void setUsername(Label username) {
+		this.username = username;
+	}
+	
+	public void exit(){
+		
+		Alert confirm = new Alert(AlertType.CONFIRMATION);
+		confirm.setTitle(getProp().getPropertyValue("main.exit.title"));
+		confirm.setHeaderText(getProp().getPropertyValue("main.exit.title"));
+		confirm.setContentText(getProp().getPropertyValue("main.title.content"));
+		
+		Optional<ButtonType> result = confirm.showAndWait();
+		if(result.get() == ButtonType.OK)
+			getSession().closeSession();
+			System.exit(0);
+		
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
 
 }

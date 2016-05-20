@@ -3,45 +3,112 @@ package com.dotcook.application;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.dotcook.main.Main;
 import com.dotcook.resources.Properties;
 import com.dotcook.user.User;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
+import javafx.event.Event;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 
-public interface ApplicationController extends Initializable{
+public class ApplicationController implements ApplicationInterface{
 	
-	public abstract void initialize(URL location, ResourceBundle resource);	
+	private User user;
+	private Application app;
+	private ObservableList<Application> apps;
+	private Properties prop;
 	
-	public abstract void setUser(User user);
+	@Override
+	public void initialize(URL location, ResourceBundle resource) {		
+		
+	}
 	
-	public abstract User getUser();
+	public Main getRoot(Event e){
+		Scene scene = ((Node) e.getTarget()).getScene();
+		Main root = (Main) scene.getRoot();		
+		return root;		
+	}
+
+	@Override
+	public void setUser(User user) {
+		this.user = user;		
+	}
+
+	@Override
+	public User getUser() {		
+		return user;
+	}
+
+	@Override
+	public void setApp(Application app) {
+		this.app = app;		
+	}
+
+	@Override
+	public Application getApp() {
+		return app;
+	}
+
+	@Override
+	public void setApps(ObservableList<Application> apps) {
+		this.apps = apps;
+	}
+
+	@Override
+	public ObservableList<Application> getApps() {
+		return apps;
+	}
 	
-	public abstract void setApp(Application app);
+	@Override
+	public Properties getProp() {
+		return prop;
+	}
+
+	@Override
+	public void setProp(Properties prop) {		
+		this.prop = prop;		
+	}
 	
-	public abstract Application getApp();
+	@Override
+	public void actionSave(ActionEvent e) {
+		
+	}
 	
-	public abstract void setApps(ObservableList<Application> apps);
-	
-	public abstract ObservableList<Application> getApps();
-	
-	public abstract void setProp(Properties prop);
-	
-	public abstract Properties getProp();
-	
-	public abstract void actionBack(ActionEvent e);
-	
-	public abstract void actionFinish(ActionEvent e);
-	
-	public abstract void actionCancel(ActionEvent e);
-	
-	public abstract void actionPrint(ActionEvent e);
-	
-	public abstract void actionSearch(ActionEvent e);
-	
-	public abstract void actionHelp(ActionEvent e);
-	
-	public abstract void actionSys(ActionEvent e);
+	@Override
+	public void actionBack(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void actionFinish(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void actionCancel(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void actionPrint(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void actionSearch(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void actionHelp(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void actionSys(ActionEvent e) {
+		
+	}
 
 }

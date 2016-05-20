@@ -66,3 +66,52 @@ CREATE TABLE TOOLBAR_APPLICATION (
     IS_ENABLED BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (ID_APPLICATION,ID_BUTTON));
     
+CREATE TABLE SESSION (
+	ID_SESSION VARCHAR(100),
+    ID_USER VARCHAR(30),
+    HOSTNAME VARCHAR(30),
+    SERVERNAME VARCHAR(30),
+    START_DATE DATE,
+    END_DATE DATE,
+    PRIMARY KEY (ID_SESSION,ID_USER)
+);
+
+ALTER TABLE SESSION
+	ADD FOREIGN KEY (ID_USER) REFERENCES USER(ID_USER);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

@@ -1,8 +1,6 @@
 package com.dotcook.main;
 
 import java.io.IOException;
-
-
 import com.dotcook.connection.Connection;
 import com.dotcook.resources.Properties;
 
@@ -25,7 +23,7 @@ public class DotCook extends Application{
 		prop.setProp();
 				
 		if(conn.checkConnection() == true ){
-			
+						
 			Parent root = FXMLLoader.load(getClass().getResource("/com/dotcook/login/Login.fxml"));
 			
 			Scene scene = new Scene(root);

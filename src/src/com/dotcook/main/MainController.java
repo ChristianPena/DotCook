@@ -5,15 +5,9 @@ import java.util.ResourceBundle;
 
 import com.dotcook.application.Application;
 import com.dotcook.application.ApplicationController;
-import com.dotcook.resources.Properties;
-import com.dotcook.user.User;
-
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -21,18 +15,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 
-public class MainController implements ApplicationController {
+public class MainController extends ApplicationController {
 	
 	@FXML TreeView<String> leftMenu = null;
 	@FXML WebView centralView;
 	@FXML BorderPane centerPane;
 	@FXML ToolBar toolBar;
-	
-	private Properties prop;
-	private User user;
-	private Application app;
-	private ObservableList<Application> apps;
-	
+		
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
 
@@ -68,14 +57,12 @@ public class MainController implements ApplicationController {
 						category.getChildren().add(item);
 						
 					}
-					
 				}
 				
 				rootItem.getChildren().add(category);
-			
+				
 			}			
-			
-		}
+		}		
 		
 		leftMenu.setRoot(rootItem);
 		
@@ -86,10 +73,7 @@ public class MainController implements ApplicationController {
 					TreeItem<String> item = leftMenu.getSelectionModel().getSelectedItem();
 					for(Application app : getApps()){
 						if(item.getValue().equals(app.getDescription())){
-							Scene scene = ((Node) mouseEvent.getTarget()).getScene();
-							Main main = (Main) scene.getRoot();
-							main.setApp(app.getIdApplication());	
-							main.setCenterPane(app);
+							getRoot(mouseEvent).setCenterPane(app);
 						}
 					}
 				}
@@ -107,45 +91,6 @@ public class MainController implements ApplicationController {
 		return leftMenu;
 	}
 
-	@Override
-	public Properties getProp() {
-		return prop;
-	}
-
-	@Override
-	public void setProp(Properties prop) {		
-		this.prop = prop;		
-	}
-
-	@Override
-	public void setUser(User user) {
-		this.user = user;		
-	}
-
-	@Override
-	public User getUser() {		
-		return user;
-	}
-
-	@Override
-	public void setApp(Application app) {
-		this.app = app;		
-	}
-
-	@Override
-	public Application getApp() {
-		return app;
-	}
-
-	@Override
-	public void setApps(ObservableList<Application> apps) {
-		this.apps = apps;
-	}
-
-	@Override
-	public ObservableList<Application> getApps() {
-		return apps;
-	}
 	
 	public void setCenterPane(BorderPane centerPane){
 		this.centerPane = centerPane;
@@ -154,28 +99,10 @@ public class MainController implements ApplicationController {
 	public BorderPane getCenterPane(){
 		return centerPane;
 	}
-	
-	
-	@Override
-	public void actionBack(ActionEvent e){
-	}
-	
+		
 	@Override	
 	public void actionFinish(ActionEvent e){
-		System.out.println("MainController: Finish");
-		System.exit(0);
-	}
-	
-	@Override
-	public void actionCancel(ActionEvent e){
-	}
-	
-	@Override
-	public void actionPrint(ActionEvent e){
-	}
-	
-	@Override
-	public void actionSearch(ActionEvent e){
+		getRoot(e).exit();
 	}
 	
 	@Override	
@@ -183,9 +110,7 @@ public class MainController implements ApplicationController {
 	}
 	
 	@Override
-	public void actionSys(ActionEvent e){
-	}
-
-	
+	public void actionSys(ActionEvent e){		
+	}	
 
 }
