@@ -2,11 +2,13 @@ package com.dotcook.main;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 import com.dotcook.application.Application;
 import com.dotcook.application.ToolbarApplication;
+import com.dotcook.popup.system.SystemInfoController;
 import com.dotcook.resources.Properties;
 import com.dotcook.session.Session;
 import com.dotcook.user.User;
@@ -18,6 +20,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -31,6 +35,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends BorderPane{
@@ -191,7 +196,7 @@ public class Main extends BorderPane{
 			
 			setApp(app);
 			
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(app.getSource()));			
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(app.getSource()));
 			
 			Class classController = Class.forName(app.getController());			
 			
@@ -319,13 +324,10 @@ public class Main extends BorderPane{
 					paramEvent[0] = ActionEvent.class;
 					
 					Button btnPressed = (Button) e.getSource();
-					String execMethod = null;
+					String execMethod = "";
 					
-					if((btnPressed.getText()).equals(getBtnBack().getText()))
-						execMethod = "actionBack";
-					
-					if((btnPressed.getText()).equals(getBtnFinish().getText()))
-						execMethod = "actionFinish";
+					if((btnPressed.getText()).equals(getBtnSave().getText()))
+						execMethod = "actionSave";					
 					
 					if((btnPressed.getText()).equals(getBtnCancel().getText()))
 						execMethod = "actionCancel";
@@ -335,15 +337,25 @@ public class Main extends BorderPane{
 					
 					if((btnPressed.getText()).equals(getBtnSearch().getText()))
 						execMethod = "actionSearch";
-					
-					if((btnPressed.getText()).equals(getBtnHelp().getText()))
-						execMethod = "actionHelp";
-					
-					if((btnPressed.getText()).equals(getBtnSys().getText()))
-						execMethod = "actionSys";					
-					
-					method = classController.getDeclaredMethod(execMethod, paramEvent);			
-					method.invoke(controller, e);					
+															
+					if(!execMethod.equals("")){					
+						method = classController.getDeclaredMethod(execMethod, paramEvent);			
+						method.invoke(controller, e);
+					} else {
+						
+						if((btnPressed.getText()).equals(getBtnBack().getText()))
+							actionBack();
+						
+						if((btnPressed.getText()).equals(getBtnFinish().getText()))
+							actionFinish();
+						
+						if((btnPressed.getText()).equals(getBtnHelp().getText()))
+							showHelp();
+						
+						if((btnPressed.getText()).equals(getBtnSys().getText()))
+							showSystemInfo();
+						
+					}
 				
 				}catch(Exception ex){
 					ex.printStackTrace();
@@ -381,12 +393,12 @@ public class Main extends BorderPane{
 				else
 					getBtnBack().setDisable(true);
 				break;
-			case "FINISH":
-				if(tool.isEnabled()==true)
-					getBtnFinish().setDisable(false);
-				else
-					getBtnFinish().setDisable(true);
-				break;
+//			case "FINISH":
+//				if(tool.isEnabled()==true)
+//					getBtnFinish().setDisable(false);
+//				else
+//					getBtnFinish().setDisable(true);
+//				break;
 			case "CANCEL":
 				if(tool.isEnabled()==true)
 					getBtnCancel().setDisable(false);
@@ -405,18 +417,18 @@ public class Main extends BorderPane{
 				else
 					getBtnSearch().setDisable(true);
 				break;
-			case "HELP":
-				if(tool.isEnabled()==true)
-					getBtnHelp().setDisable(false);
-				else
-					getBtnHelp().setDisable(true);
-				break;
-			case "SYSTEM":
-				if(tool.isEnabled()==true)
-					getBtnSys().setDisable(false);
-				else
-					getBtnSys().setDisable(true);
-				break;
+//			case "HELP":
+//				if(tool.isEnabled()==true)
+//					getBtnHelp().setDisable(false);
+//				else
+//					getBtnHelp().setDisable(true);
+//				break;
+//			case "SYSTEM":
+//				if(tool.isEnabled()==true)
+//					getBtnSys().setDisable(false);
+//				else
+//					getBtnSys().setDisable(true);
+//				break;
 			
 			}			
 		}
@@ -796,6 +808,7 @@ public class Main extends BorderPane{
 		
 		Optional<ButtonType> result = confirm.showAndWait();
 		if(result.get() == ButtonType.OK)
+			setStatusMessage("Saliendo del Sistema...", 'I');
 			getSession().closeSession();
 			System.exit(0);
 		
@@ -808,5 +821,47 @@ public class Main extends BorderPane{
 	public void setSession(Session session) {
 		this.session = session;
 	}
-
+	
+	public void actionFinish(){
+		
+		if(getApp().getIdApplication() == 1){
+			exit();
+		} else {
+			removeStep();
+			setCenterPane(getLastStep());			
+		}
+		
+	}
+	
+	public void actionBack(){
+		setStatusMessage("Back button Pressed", 'S');
+		removeStep();
+		setCenterPane(getLastStep());
+	}
+	
+	public void showHelp(){
+		setStatusMessage("Help button Pressed", 'S');		
+	}
+	
+	public void showSystemInfo(){
+		setStatusMessage("Recuperando información del sistema", 'I');
+		try {			
+			String fxmlSource = "/com/dotcook/popup/system/SystemInfo.fxml";
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlSource));
+			SystemInfoController controller = new SystemInfoController();
+			controller.setProp(getProp());
+			controller.setSession(getSession());
+			fxmlLoader.setController(controller);
+			Parent popupSystemInfo = (Parent) fxmlLoader.load();
+			Scene scene = new Scene(popupSystemInfo);
+			Stage stage = new Stage();
+			stage.setTitle(getProp().getPropertyValue("popup.system.title"));
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.getIcons().add(new Image(getClass().getResourceAsStream("/com/dotcook/resources/icons/system_16x16.png"))); 
+			stage.show();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}		
+	}
 }

@@ -16,7 +16,9 @@ public class Session extends Connection{
 	private String hostname;
 	private String servername;
 	private Date startDate;
+	private Date startTime;
 	private Date finishDate;
+	private Date finishTime;
 	
 	public Session(){
 		
@@ -40,6 +42,7 @@ public class Session extends Connection{
 				setHostname(rs.getString("HOSTNAME"));
 				setServername(rs.getString("SERVERNAME"));
 				setStartDate(rs.getDate("START_DATE"));
+				setStartTime(rs.getTime("START_DATE"));
 			
 			}
 			
@@ -113,12 +116,28 @@ public class Session extends Connection{
 		this.startDate = startDate;
 	}
 
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
 	public Date getFinishDate() {
 		return finishDate;
 	}
 
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
+	}
+
+	public Date getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Date finishTime) {
+		this.finishTime = finishTime;
 	}
 
 }

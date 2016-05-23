@@ -75,16 +75,6 @@ public class ApplicationController implements ApplicationInterface{
 	public void actionSave(ActionEvent e) {
 		
 	}
-	
-	@Override
-	public void actionBack(ActionEvent e) {
-		
-	}
-
-	@Override
-	public void actionFinish(ActionEvent e) {
-		
-	}
 
 	@Override
 	public void actionCancel(ActionEvent e) {
@@ -98,16 +88,6 @@ public class ApplicationController implements ApplicationInterface{
 
 	@Override
 	public void actionSearch(ActionEvent e) {
-		
-	}
-
-	@Override
-	public void actionHelp(ActionEvent e) {
-		
-	}
-
-	@Override
-	public void actionSys(ActionEvent e) {
 		
 	}
 

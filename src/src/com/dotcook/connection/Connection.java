@@ -1,7 +1,11 @@
 package com.dotcook.connection;
 
+import java.sql.CallableStatement;
+import java.sql.DatabaseMetaData;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Connection {
@@ -137,6 +141,87 @@ public class Connection {
 		}		
 		
 		return status;
+	}
+	
+	public DatabaseMetaData getDbmd(){
+		try{
+			openConnection();
+			DatabaseMetaData dbmd = getConn().getMetaData();
+			closeConnection();
+			
+			return dbmd;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			return null;			
+		}
+		
+	}
+	
+	public String getServerTime(){
+		
+		String serverTime = "";
+		
+		try {			
+			openConnection();
+			String sql = "SELECT NOW()";
+			CallableStatement stmt = getConn().prepareCall(sql);
+			ResultSet rs = stmt.executeQuery();			
+			Date now = null;
+			
+			while(rs.next()) {
+				now = rs.getTime(1);				
+			}		
+			
+			rs.close();			
+			closeConnection();
+			
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss");
+			serverTime = sdf.format(now);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		return serverTime;
+	}
+	
+	public String getServerOS(){
+		
+		String serverOS = "";
+		
+		try {			
+			openConnection();
+			String sql = "SHOW VARIABLES WHERE VARIABLE_NAME IN ('VERSION_COMPILE_OS','VERSION_COMPILE_MACHINE');";
+			CallableStatement stmt = getConn().prepareCall(sql);
+			ResultSet rs = stmt.executeQuery();			
+			
+			String srvOS = "";
+			String srvOSVersion = "";
+			
+			while(rs.next()) {
+				
+				switch(rs.getString("Variable_name")){
+				case "version_compile_os":
+					srvOS = rs.getString("Value");
+					break;
+				case "version_compile_machine":
+					srvOSVersion = rs.getString("Value");
+					break;
+				}
+								
+			}
+			
+			serverOS = srvOS + " " + srvOSVersion;
+			
+			rs.close();			
+			closeConnection();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		return serverOS;
 	}
 
 	public java.sql.Connection getConn() {

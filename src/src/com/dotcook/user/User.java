@@ -40,6 +40,29 @@ public class User extends Connection{
 		}
 		
 	}
+	
+	public boolean changePassword(String idUser, String currPass, String newPass){
+		
+		boolean result = false;
+		
+		try{
+			
+			super.openConnection();
+			String sql = "{CALL CHANGE_PASSWORD(?,?,?)}";		
+			CallableStatement stmt = super.conn.prepareCall(sql);
+			stmt.setString(1, idUser);
+			stmt.setString(2, currPass);
+			stmt.setString(3, newPass);
+			
+			result = stmt.execute();
+			
+		} catch(Exception ex){			
+			ex.printStackTrace();
+			result = false;
+		}
+
+		return result;
+	}
 
 	public String getIdUser() {
 		return idUser;

@@ -31,19 +31,11 @@ public interface ApplicationInterface extends Initializable{
 	public abstract Properties getProp();
 	
 	public abstract void actionSave(ActionEvent e);
-	
-	public abstract void actionBack(ActionEvent e);
-	
-	public abstract void actionFinish(ActionEvent e);
-	
+
 	public abstract void actionCancel(ActionEvent e);
 	
 	public abstract void actionPrint(ActionEvent e);
 	
 	public abstract void actionSearch(ActionEvent e);
 	
-	public abstract void actionHelp(ActionEvent e);
-	
-	public abstract void actionSys(ActionEvent e);
-
 }

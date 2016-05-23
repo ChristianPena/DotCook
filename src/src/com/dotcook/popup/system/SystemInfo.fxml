@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="575.0" minWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <AnchorPane minHeight="100.0" style="-fx-background-color: #FFF;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="popupTitle" layoutX="25.0" layoutY="33.0" text="popup.system.title" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="imgView" fitHeight="64.0" fitWidth="64.0" layoutX="307.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="18.0" />
+         </children>
+      </AnchorPane>
+   </top>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Datos de la sesión" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Separator layoutX="5.0" layoutY="39.0" prefWidth="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0" />
+            <Label layoutX="15.0" layoutY="50.0" text="Usuario" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="55.0" />
+            <TextField fx:id="username" editable="false" focusTraversable="false" layoutX="87.0" layoutY="46.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.topAnchor="50.0" />
+            <TextField fx:id="systTime" editable="false" focusTraversable="false" layoutX="286.0" layoutY="46.0" prefHeight="25.0" prefWidth="80.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0" />
+            <Label layoutX="209.0" layoutY="50.0" text="Hora del sistema" AnchorPane.topAnchor="55.0" />
+            <TextField fx:id="startSession" editable="false" focusTraversable="false" layoutX="87.0" layoutY="84.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="85.0"/>
+            <Label layoutX="10.0" layoutY="88.0" text="Entrada al sistema" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="90.0" />
+            <Separator layoutX="37.0" layoutY="158.0" prefWidth="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="145.0" />
+            <Label layoutX="15.0" layoutY="127.0" text="Datos del equipo" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="165.0" text="Nombre" AnchorPane.topAnchor="160.0" />
+            <Label layoutX="187.0" layoutY="160.0" text="Sist. Operativo" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="160.0" />
+            <Label layoutX="14.0" layoutY="216.0" text="Dir. IP" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="195.0" />
+            <TextField fx:id="hostname" editable="false" focusTraversable="false" layoutX="75.0" layoutY="151.0" prefWidth="100.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="155.0" />
+            <TextField fx:id="hostSO" editable="false" focusTraversable="false" layoutX="231.0" layoutY="155.0" prefWidth="100.0" AnchorPane.rightAnchor="15.0" />
+            <TextField fx:id="hostIP" editable="false" focusTraversable="false" layoutX="75.0" layoutY="191.0" prefWidth="100.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="190.0" />
+            <TextField fx:id="hostMac" editable="false" focusTraversable="false" layoutX="224.0" layoutY="198.0" prefWidth="100.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="190.0" />
+            <Label layoutX="200.0" layoutY="195.0" text="Dir. Física" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="195.0" />
+            <Label layoutX="15.0" layoutY="233.0" text="Datos del servidor" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="225.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="250.0" />
+            <TextField fx:id="servername" editable="false" focusTraversable="false" layoutX="63.0" layoutY="266.0" prefWidth="100.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="260.0" />
+            <TextField fx:id="serverSO" editable="false" focusTraversable="false" layoutX="295.0" layoutY="253.0" prefWidth="100.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="260.0" />
+            <Label layoutX="73.0" layoutY="354.0" text="Sist. Operativo" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="265.0" />
+            <Label layoutX="187.0" layoutY="311.0" text="Nombre" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="265.0" />
+            <Label layoutX="15.0" layoutY="370.0" text="Driver" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="370.0" />
+            <TextField fx:id="DBDriver" editable="false" focusTraversable="false" layoutX="75.0" layoutY="365.0" prefWidth="100.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="365.0" />
+            <TextField fx:id="DBSyst" editable="false" focusTraversable="false" layoutX="75.0" layoutY="330.0" prefWidth="100.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="330.0" />
+            <Label layoutX="200.0" layoutY="370.0" text="Versión" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="370.0" />
+            <Separator layoutX="10.0" layoutY="360.0" prefWidth="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="320.0" />
+            <Label layoutX="200.0" layoutY="335.0" text="Esquema" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="335.0" />
+            <Label layoutX="15.0" layoutY="335.0" text="Motor" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="335.0" />
+            <TextField fx:id="DBSchema" editable="false" focusTraversable="false" layoutX="285.0" layoutY="330.0" prefWidth="100.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="330.0" />
+            <Label layoutX="20.0" layoutY="335.0" text="Datos de la Base de Datos" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="295.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="DBDriverVersion" editable="false" focusTraversable="false" layoutX="285.0" layoutY="365.0" prefWidth="100.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="365.0" />
+            <TextField fx:id="DBStringConnection" editable="false" focusTraversable="false" layoutX="75.0" layoutY="400.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="400.0"/>               
+            <Label layoutX="15.0" layoutY="405.0" text="URL" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="405.0" />
+         </children></AnchorPane>
+   </center>
+</BorderPane>

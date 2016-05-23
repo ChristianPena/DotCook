@@ -17,10 +17,6 @@
       <WebView fx:id="centralView" minHeight="-1.0" minWidth="500.0" prefHeight="-1.0" prefWidth="-1.0" BorderPane.alignment="CENTER" />
    </center>
    <top>
-      <ToolBar fx:id="toolBar" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button mnemonicParsing="false" text="Button" />
-        </items>
-      </ToolBar>
+      <ToolBar fx:id="toolBar" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </top>
 </BorderPane>

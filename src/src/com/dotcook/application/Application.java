@@ -25,6 +25,8 @@ public class Application extends com.dotcook.connection.Connection{
 	private String nameCategory;
 	private String descriptionCategory;
 	private String controller;
+	private int posApp;
+	private int posCat;
 	private ObservableList<ToolbarApplication> tool;
 	private ObservableList<ToolbarApplication> toolbarApplication;	
 	
@@ -57,6 +59,8 @@ public class Application extends com.dotcook.connection.Connection{
 				app.setNameCategory(rs.getString("NAME_CATEGORY"));
 				app.setDescriptionCategory(rs.getString("DESCRIPTION_CATEGORY"));
 				app.setController(rs.getString("CONTROLLER"));
+				app.setPosApp(rs.getInt("APP_POS"));
+				app.setPosCat(rs.getInt("CAT_POS"));
 				apps.add(app);
 				
 			}
@@ -107,6 +111,8 @@ public class Application extends com.dotcook.connection.Connection{
 				this.setNameCategory(app.getNameCategory());
 				this.setDescriptionCategory(app.getDescriptionCategory());
 				this.setController(app.getController());
+				this.setPosApp(app.getPosApp());
+				this.setPosCat(app.getPosCat());
 			}
 		}
 		
@@ -191,6 +197,22 @@ public class Application extends com.dotcook.connection.Connection{
 
 	public void setTool(ObservableList<ToolbarApplication> tool) {
 		this.tool = tool;
+	}
+
+	public int getPosApp() {
+		return posApp;
+	}
+
+	public void setPosApp(int posApp) {
+		this.posApp = posApp;
+	}
+
+	public int getPosCat() {
+		return posCat;
+	}
+
+	public void setPosCat(int posCat) {
+		this.posCat = posCat;
 	}
 
 }
