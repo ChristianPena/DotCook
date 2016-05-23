@@ -1,18 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ToolBar fx:id="toolbar" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </top>
    <center>
-      <AnchorPane prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="1208.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="292.0" layoutY="153.0" text="Gestión de Aplicaciones" />
+            <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="14.0" prefHeight="357.0" prefWidth="760.0" text="Información de la Aplicación" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="758.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="14.0" text="Identificador" />                        
+                        <TextField fx:id="inputIdApplication" layoutX="107.0" layoutY="10.0" prefHeight="29.0" prefWidth="50.0" />
+                        <Label layoutX="14.0" layoutY="54.0" text="Nombre" />
+                        <TextField fx:id="inputNameApplication" layoutX="107.0" layoutY="50.0" prefHeight="29.0" prefWidth="325.0" />
+                        <Label layoutX="14.0" layoutY="94.0" text="Descripción" />
+                        <TextField fx:id="inputDescription" layoutX="107.0" layoutY="90.0" prefHeight="29.0" prefWidth="325.0" />
+                        
+						<Label layoutX="465.0" layoutY="14.0" text="Categoría" />                                                
+                        <ChoiceBox fx:id="choiceCategory" layoutX="622.0" layoutY="10.0" prefWidth="325.0" />
+                        <Label layoutX="465.0" layoutY="54.0" text="Vista" />
+                        <TextField fx:id="inputSource" layoutX="623.0" layoutY="50.0" prefWidth="325.0" />
+                        <Label layoutX="465.0" layoutY="94.0" text="Controlador" />
+                        <TextField fx:id="inputController" layoutX="623.0" layoutY="90.0" prefWidth="325.0" />
+                        <Label layoutX="465.0" layoutY="134.0" text="Posición" />
+                        <TextField fx:id="inputPosition" layoutX="623.0" layoutY="130.0" prefWidth="50.0" />
+                        <TitledPane collapsible="false" layoutX="14.0" layoutY="178.0" prefHeight="100.0" prefWidth="719.0" text="Botones habilitados de la barra principal" AnchorPane.leftAnchor="0.0">
+                           <content>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <CheckBox fx:id="chkSave" mnemonicParsing="false" text="Grabar" GridPane.columnIndex="0" />
+                                    <CheckBox fx:id="chkCancel" mnemonicParsing="false" text="Cancelar" GridPane.columnIndex="1" />
+                                    <CheckBox fx:id="chkPrint" mnemonicParsing="false" text="Imprimir" GridPane.columnIndex="2" />
+                                    <CheckBox fx:id="chkSearch" mnemonicParsing="false" text="Buscar" GridPane.columnIndex="3" />
+                                 </children>
+                              </GridPane>
+                           </content></TitledPane>                        
+                     </children></AnchorPane>
+              </content>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TitledPane>
+            <TableView fx:id="viewApplications" layoutX="20.0" layoutY="393.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="400.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
          </children>
       </AnchorPane>
    </center>
