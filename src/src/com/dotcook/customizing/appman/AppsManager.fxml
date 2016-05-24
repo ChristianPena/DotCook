@@ -12,9 +12,9 @@
    <center>
       <AnchorPane prefHeight="1208.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="14.0" prefHeight="357.0" prefWidth="760.0" text="Información de la Aplicación" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="14.0" prefHeight="340.0" prefWidth="760.0" text="Información de la Aplicación" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="758.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="758.0">
                      <children>
                         <Label layoutX="14.0" layoutY="14.0" text="Identificador" />                        
                         <TextField fx:id="inputIdApplication" layoutX="107.0" layoutY="10.0" prefHeight="29.0" prefWidth="50.0" />
@@ -44,7 +44,7 @@
                                   <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <CheckBox fx:id="chkSave" mnemonicParsing="false" text="Grabar" GridPane.columnIndex="0" />
+                                    <CheckBox fx:id="chkSave" maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" prefHeight="15.0" text="Grabar" GridPane.columnIndex="0" />
                                     <CheckBox fx:id="chkCancel" mnemonicParsing="false" text="Cancelar" GridPane.columnIndex="1" />
                                     <CheckBox fx:id="chkPrint" mnemonicParsing="false" text="Imprimir" GridPane.columnIndex="2" />
                                     <CheckBox fx:id="chkSearch" mnemonicParsing="false" text="Buscar" GridPane.columnIndex="3" />
@@ -57,12 +57,14 @@
                   <Font size="18.0" />
                </font>
             </TitledPane>
-            <TableView fx:id="viewApplications" layoutX="20.0" layoutY="393.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="400.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-              </columns>
-            </TableView>
+            <TitledPane animated="false" collapsible="false" layoutX="40.0" layoutY="374.0" text="Listado de Aplicaciones" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="380.0">
+               <content>
+                  <TableView fx:id="viewApplications" prefHeight="200.0" prefWidth="200.0" />
+               </content>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TitledPane>
          </children>
       </AnchorPane>
    </center>

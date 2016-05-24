@@ -67,3 +67,6 @@ src/bin/
 *~$*.doc
 *~$*.xlsx
 *~$*.xls
+src/src/com/dotcook/connection/ConnectionParameters.xml
+src/src/com/dotcook/connection/ConnectionParameters.xml
+*/ConnectionParameters.xml
