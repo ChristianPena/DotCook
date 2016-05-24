@@ -4,14 +4,20 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.dotcook.application.Application;
 import com.dotcook.application.ApplicationController;
+import com.dotcook.application.Category;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
@@ -43,12 +49,18 @@ public class AppsManagerController extends ApplicationController {
 	@FXML TextField inputPosition;
 	@FXML ChoiceBox<String> choiceCategory;
 	
+	private boolean editMode;
+		
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
 		
 		fillToolbar();
 		
+		fillChoiceCategory();
+		
 		setDisabledForm(true);
+		
+		setEditMode(false);
 
 	}
 	
@@ -68,6 +80,17 @@ public class AppsManagerController extends ApplicationController {
 		
 		setToolbar(toolbar);
 		
+	}
+	
+	public void fillChoiceCategory(){
+		AppsManager appMan = new AppsManager();
+		ObservableList<String> choiceItems = FXCollections.observableArrayList();
+		
+		for(Category cat : appMan.getCategories()) {			
+			choiceItems.add(cat.getDescriptionCategory());			
+		}
+		
+		choiceCategory.setItems(choiceItems);
 	}
 	
 	private void createButtons(){
@@ -98,7 +121,7 @@ public class AppsManagerController extends ApplicationController {
 		removeApplication.setMinWidth(buttonWidth);
 		setRemoveApplication(removeApplication);
 		
-		Button categories        = new Button("Categor韆s");
+		Button categories        = new Button("Categor铆as");
 		categories.setGraphic(
 				new ImageView(
 						new Image(getClass()
@@ -145,15 +168,41 @@ public class AppsManagerController extends ApplicationController {
 	}
 	
 	public void addApplication(Event e){
-		getRoot(e).setStatusMessage("Add Application Pressed!", 'S');
+		clearInputs();
+		setDisabledForm(false);
+		setEditableForm(true);
+		getRoot(e).setStatusMessage("Ingrese los datos de la nueva aplicaci贸n", 'S');
 	}
 	
 	public void editApplication(Event e){
-		getRoot(e).setStatusMessage("Edit Application Pressed!", 'S');
+		
+		if(isEditMode()==false){
+			setEditMode(true);
+			getRoot(e).setStatusMessage("Se ha habilitado la edici贸n de la aplicaci贸n", 'S');
+		} else {
+			setEditMode(false);
+			getRoot(e).setStatusMessage("Se ha deshabilitado la edici贸n de la aplicaci贸n", 'S');
+		}
+		
+		setEditableForm(isEditMode());
+		
 	}
 	
 	public void removeApplication(Event e){
-		getRoot(e).setStatusMessage("Remove Application Pressed!", 'S');
+		
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Eliminar aplicaci贸n");
+		alert.setHeaderText("Esta a punto de eliminar una aplicaci贸n");
+		alert.setContentText("驴Est谩 seguro que desea eliminar la aplicaci贸n?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			
+			getRoot(e).setStatusMessage("Aplicaci贸n eliminada satisfactoriamente", 'S');		    
+		} else {
+			getRoot(e).setStatusMessage("Acci贸n cancelada por el usuario", 'S');
+		}	
+		
 	}
 	
 	public void showCategories(Event e){
@@ -162,15 +211,40 @@ public class AppsManagerController extends ApplicationController {
 	
 	public void setDisabledForm(boolean option){
 		
-		inputIdApplication.setDisable(true);
+		inputIdApplication.setDisable(option);
 		inputNameApplication.setDisable(option);
 		inputDescription.setDisable(option);
 		inputSource.setDisable(option);
 		inputController.setDisable(option);
 		inputPosition.setDisable(option);
-		choiceCategory.setDisable(option);
+		choiceCategory.setDisable(option);		
 		
 	}
+	
+	public void setEditableForm(boolean option){
+		
+		inputIdApplication.setEditable(false);
+		inputNameApplication.setEditable(option);
+		inputDescription.setEditable(option);
+		inputSource.setEditable(option);
+		inputController.setEditable(option);
+		inputPosition.setEditable(option);
+		//choiceCategory.setEditable(option);		
+		
+	}
+	
+	public void clearInputs(){
+		
+		inputIdApplication.clear();
+		inputNameApplication.clear();
+		inputDescription.clear();
+		inputSource.clear();
+		inputController.clear();
+		inputPosition.clear();
+		//choiceCategory.clear();
+		
+	}
+	
 	
 	@Override
 	public void actionSave(ActionEvent e){
@@ -185,8 +259,8 @@ public class AppsManagerController extends ApplicationController {
 	@Override
 	public void actionSearch(ActionEvent e){
 		Dialog<Pair<String,String>> dialog = new Dialog<>();
-		dialog.setTitle("Buscar Aplicaci髇...");
-		dialog.setHeaderText("Ingresa los parametros de b鷖queda");
+		dialog.setTitle("Buscar Aplicaci贸n...");
+		dialog.setHeaderText("Ingresa los parametros de b煤squeda");
 		
 		dialog.setGraphic(new ImageView(getClass().getResource("/com/dotcook/resources/icons/search_32x32.png").toString()));
 		
@@ -199,14 +273,14 @@ public class AppsManagerController extends ApplicationController {
 		grid.setPadding(new Insets(20,150,10,10));
 		
 		TextField appName = new TextField();
-		appName.setPromptText("Nombre de la aplicaci髇");
+		appName.setPromptText("Nombre de la aplicaci贸n");
 		
 		TextField description = new TextField();
-		description.setPromptText("Descripci髇");
+		description.setPromptText("Descripci贸n");
 		
 		grid.add(new Label("Nombre:"), 0, 0);
 		grid.add(appName, 1, 0);
-		grid.add(new Label("Descripci髇:"), 0, 1);
+		grid.add(new Label("Descripci贸n:"), 0, 1);
 		grid.add(description, 1, 1);
 		
 		dialog.getDialogPane().setContent(grid);
@@ -223,8 +297,30 @@ public class AppsManagerController extends ApplicationController {
 		Optional<Pair<String,String>> result = dialog.showAndWait();
 		
 		result.ifPresent(getApplication -> {
-			inputIdApplication.setText("133");
+			Application app = new Application();
+			AppsManager appMan = new AppsManager();
+			app = appMan.searchApplication(appName.getText(), description.getText());
+			if(app != null){
+				fillScreenAppData(app);
+				getRoot(e).setStatusMessage("B煤squeda exitosa", 'S');				
+			} else{
+				getRoot(e).setStatusMessage("No se encontr贸 ninguna aplicaci贸n con los par谩metros ingresados", 'E');
+			}
 		});
+		
+	}
+	
+	public void fillScreenAppData(Application app){
+		
+		inputIdApplication.setText(app.getIdApplication()+"");
+		inputNameApplication.setText(app.getNameApplication());
+		inputDescription.setText(app.getDescription());
+		inputSource.setText(app.getSource());
+		inputController.setText(app.getController());
+		inputPosition.setText(app.getPosApp()+"");
+		setDisabledForm(false);
+		setEditableForm(false);
+		//((Labeled) choiceCategory).setText(app.getNameCategory());
 		
 	}
 	
@@ -266,6 +362,14 @@ public class AppsManagerController extends ApplicationController {
 
 	public void setCategories(Button categories) {
 		this.categories = categories;
+	}
+
+	public boolean isEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
 	}
 	
 }
