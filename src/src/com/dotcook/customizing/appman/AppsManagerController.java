@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import com.dotcook.application.Application;
 import com.dotcook.application.ApplicationController;
 import com.dotcook.application.Category;
+import com.dotcook.application.ToolbarApplication;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,15 +21,20 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -49,7 +55,17 @@ public class AppsManagerController extends ApplicationController {
 	@FXML TextField inputPosition;
 	@FXML ChoiceBox<String> choiceCategory;
 	
+	@FXML CheckBox chkSave;
+	@FXML CheckBox chkCancel;
+	@FXML CheckBox chkPrint;
+	@FXML CheckBox chkSearch;
+	
+	@FXML TableView<Application> viewApplications;
+	
 	private boolean editMode;
+	private ObservableList<String> choiceItems;
+	private ObservableList<ToolbarApplication> toolbarApps;
+	private ObservableList<Category> obsCategories;
 		
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
@@ -61,6 +77,8 @@ public class AppsManagerController extends ApplicationController {
 		setDisabledForm(true);
 		
 		setEditMode(false);
+		
+		fillViewApplications();
 
 	}
 	
@@ -86,14 +104,18 @@ public class AppsManagerController extends ApplicationController {
 		AppsManager appMan = new AppsManager();
 		ObservableList<String> choiceItems = FXCollections.observableArrayList();
 		
-		for(Category cat : appMan.getCategories()) {			
+		setObsCategories(appMan.getCategories());
+		
+		for(Category cat : getObsCategories()) {			
 			choiceItems.add(cat.getDescriptionCategory());			
 		}
 		
-		choiceCategory.setItems(choiceItems);
+		setChoiceItems(choiceItems);
+		
+		choiceCategory.setItems(getChoiceItems());
 	}
 	
-	private void createButtons(){
+	public void createButtons(){
 		
 		Double buttonWidth = 120.0;
 		
@@ -155,6 +177,7 @@ public class AppsManagerController extends ApplicationController {
 				
 				}catch(Exception ex){
 					ex.printStackTrace();
+					launchExceptionDialog(ex);
 				}
 				
 			}
@@ -198,7 +221,23 @@ public class AppsManagerController extends ApplicationController {
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
 			
-			getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');		    
+			if(!(inputIdApplication.getText()).equals("")){
+				try{
+					AppsManager appMan = new AppsManager();
+					if(appMan.deleteApplication(Integer.parseInt(inputIdApplication.getText()))==true){
+						getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');
+						clearInputs();
+					} else {
+						getRoot(e).setStatusMessage("Ha ocurrido un error", 'E');
+					}
+				}catch(Exception ex){
+					ex.printStackTrace();
+					getRoot(e).showDump(ex);
+				}
+			}else{
+				getRoot(e).setStatusMessage("Debe seleccionar una aplicación primero", 'E');
+			}
+			getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');
 		} else {
 			getRoot(e).setStatusMessage("Acción cancelada por el usuario", 'S');
 		}	
@@ -217,19 +256,37 @@ public class AppsManagerController extends ApplicationController {
 		inputSource.setDisable(option);
 		inputController.setDisable(option);
 		inputPosition.setDisable(option);
-		choiceCategory.setDisable(option);		
+		choiceCategory.setDisable(option);
+		
+		chkSave.setDisable(option);
+		chkCancel.setDisable(option);
+		chkPrint.setDisable(option);
+		chkSearch.setDisable(option);
 		
 	}
 	
 	public void setEditableForm(boolean option){
+		
+		boolean disable = false;
 		
 		inputIdApplication.setEditable(false);
 		inputNameApplication.setEditable(option);
 		inputDescription.setEditable(option);
 		inputSource.setEditable(option);
 		inputController.setEditable(option);
-		inputPosition.setEditable(option);
-		//choiceCategory.setEditable(option);		
+		inputPosition.setEditable(option);		
+		
+		if(option==true)
+			disable = false;
+		else
+			disable = true;
+		
+		choiceCategory.setDisable(disable);
+		
+		chkSave.setDisable(disable);
+		chkCancel.setDisable(disable);
+		chkPrint.setDisable(disable);
+		chkSearch.setDisable(disable);
 		
 	}
 	
@@ -241,13 +298,83 @@ public class AppsManagerController extends ApplicationController {
 		inputSource.clear();
 		inputController.clear();
 		inputPosition.clear();
-		//choiceCategory.clear();
+		choiceCategory.setValue(null);
+		
+		chkSave.setSelected(false);
+		chkCancel.setSelected(false);
+		chkPrint.setSelected(false);
+		chkSearch.setSelected(false);
 		
 	}
 	
 	
 	@Override
 	public void actionSave(ActionEvent e){
+		
+		AppsManager appMan = new AppsManager();		
+		Application saveApp = new Application();
+		
+		boolean hasSave   = false;
+		boolean hasCancel = false;
+		boolean hasPrint  = false;
+		boolean hasSearch = false;
+		
+		boolean result = false;
+		
+		char mode;
+		
+		try{
+			
+			int idApp = 0;
+		
+			if(!(inputIdApplication.getText()).equals("")){
+				mode = 'U';
+				idApp = Integer.parseInt(inputIdApplication.getText());
+			} else {
+				mode = 'I';
+			}	
+			
+			saveApp.setIdApplication(idApp);
+			saveApp.setNameApplication(inputNameApplication.getText());
+			saveApp.setDescription(inputDescription.getText());
+			saveApp.setSource(inputSource.getText());
+			saveApp.setController(inputController.getText());
+			saveApp.setPosApp(Integer.parseInt(inputPosition.getText()));
+			
+			for(Category cat : getObsCategories()){			
+				if((choiceCategory.getValue()).equals(cat.getDescriptionCategory()))
+					saveApp.setIdCategory(cat.getIdCategory());						
+			}
+			
+			if(chkSave.isSelected())
+				hasSave = true;
+			
+			if(chkCancel.isSelected())
+				hasCancel = true;
+			
+			if(chkPrint.isSelected())
+				hasPrint = true;
+			
+			if(chkSearch.isSelected())
+				hasSearch = true;
+			
+			result = appMan.saveChanges(mode, saveApp, hasSave, hasCancel, hasPrint, hasSearch);
+			
+			if(result==true){
+				if(mode=='I')				
+					getRoot(e).setStatusMessage("Se ha agregado una nueva aplicación satisfactoriamente", 'S');
+				if(mode=='U')
+					getRoot(e).setStatusMessage("Cambios grabados satisfactoriamente", 'S');
+			} else {
+				getRoot(e).setStatusMessage("Ha ocurrido un error", 'E');			
+			}
+		
+		} catch(Exception ex){
+			
+			ex.printStackTrace();
+			getRoot(e).showDump(ex);
+			
+		}
 		
 	}
 	
@@ -318,9 +445,109 @@ public class AppsManagerController extends ApplicationController {
 		inputSource.setText(app.getSource());
 		inputController.setText(app.getController());
 		inputPosition.setText(app.getPosApp()+"");
+		choiceCategory.setValue(app.getDescriptionCategory());
+		
+		fillCheckBox(app.getIdApplication());
+		
 		setDisabledForm(false);
 		setEditableForm(false);
-		//((Labeled) choiceCategory).setText(app.getNameCategory());
+		
+	}
+	
+	public void fillCheckBox(int idApp){
+		AppsManager appMan = new AppsManager();
+		ObservableList<ToolbarApplication> toolbarApps = appMan.getToolbarApplication(idApp);
+		setToolbarApps(toolbarApps);
+		
+		chkSave.setSelected(false);
+		chkCancel.setSelected(false);
+		chkPrint.setSelected(false);
+		chkSearch.setSelected(false);
+		
+		for(ToolbarApplication tb : toolbarApps){
+
+			switch(tb.getIdButton()){
+			
+				case "SAVE":
+					if(tb.isEnabled()==true)
+						chkSave.setSelected(true);
+					break;
+				
+				case "CANCEL":
+					if(tb.isEnabled()==true)
+						chkCancel.setSelected(true);
+					break;
+					
+				case "PRINT":
+					if(tb.isEnabled()==true)
+						chkPrint.setSelected(true);
+					break;
+				
+				case "SEARCH":
+					if(tb.isEnabled()==true)
+						chkSearch.setSelected(true);
+					break;
+			
+			}
+			
+		};
+	}
+		
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void fillViewApplications(){
+		
+		TableView<Application> viewApplications = getViewApplications();
+		AppsManager appMan = new AppsManager();
+		
+		try{
+			
+			ObservableList<Application> allApps = appMan.getAllApplications();
+			
+			viewApplications.setEditable(false);
+			
+			TableColumn colIdApplication = new TableColumn<Application, String>("ID App");
+			colIdApplication.setMinWidth(50);
+			colIdApplication.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("idApplication"));
+			
+			TableColumn colNameApplication = new TableColumn<Application, String>("Nom.Aplicación");
+			colNameApplication.setMinWidth(150);
+			colNameApplication.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("nameApplication"));
+			
+			TableColumn colDescApplication = new TableColumn<Application, String>("Desc.Aplicación");
+			colDescApplication.setMinWidth(200);
+			colDescApplication.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("description"));
+			
+			TableColumn colCategory = new TableColumn<Application, String>("Categoría");
+			colCategory.setMinWidth(200);
+			colCategory.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("descriptionCategory"));
+			
+			TableColumn colPosApp = new TableColumn<Application, String>("Posición");
+			colPosApp.setMinWidth(50);
+			colPosApp.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("posApp"));			
+			
+			viewApplications.setItems(allApps);
+			viewApplications.getColumns().addAll(colIdApplication,colNameApplication,colDescApplication,colCategory,colPosApp);
+			
+			viewApplications.setOnMouseClicked(new EventHandler<MouseEvent>(){
+				@Override
+				public void handle(MouseEvent mouseEvent){
+					if(mouseEvent.getClickCount()==2){
+						fillScreenAppData(viewApplications.getSelectionModel().getSelectedItem());
+					}
+				}
+			});
+			
+		} catch(Exception ex){			
+			ex.printStackTrace();
+			launchExceptionDialog(ex);
+		}		
+		
+		setViewApplications(viewApplications);
 		
 	}
 	
@@ -370,6 +597,38 @@ public class AppsManagerController extends ApplicationController {
 
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
+	}
+
+	public ObservableList<String> getChoiceItems() {
+		return choiceItems;
+	}
+
+	public void setChoiceItems(ObservableList<String> choiceItems) {
+		this.choiceItems = choiceItems;
+	}
+
+	public ObservableList<ToolbarApplication> getToolbarApps() {
+		return toolbarApps;
+	}
+
+	public void setToolbarApps(ObservableList<ToolbarApplication> toolbarApps) {
+		this.toolbarApps = toolbarApps;
+	}
+
+	public ObservableList<Category> getObsCategories() {
+		return obsCategories;
+	}
+
+	public void setObsCategories(ObservableList<Category> obsCategories) {
+		this.obsCategories = obsCategories;
+	}
+	
+	public TableView<Application> getViewApplications(){
+		return viewApplications;
+	}
+	
+	public void setViewApplications(TableView<Application> viewApplications){
+		this.viewApplications = viewApplications;
 	}
 	
 }

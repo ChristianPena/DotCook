@@ -90,5 +90,10 @@ public class ApplicationController implements ApplicationInterface{
 	public void actionSearch(ActionEvent e) {
 		
 	}
+	
+	public void launchExceptionDialog(Exception ex){
+		Main root = new Main();
+		root.showDump(ex);
+	}
 
 }

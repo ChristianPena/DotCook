@@ -3,6 +3,8 @@ package com.dotcook.main;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -27,12 +29,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -364,6 +369,7 @@ public class Main extends BorderPane{
 			}
 		};
 		
+		getBtnSave().setOnAction(eHandler);
 		getBtnBack().setOnAction(eHandler);
 		getBtnFinish().setOnAction(eHandler);
 		getBtnCancel().setOnAction(eHandler);
@@ -844,7 +850,7 @@ public class Main extends BorderPane{
 	}
 	
 	public void showSystemInfo(){
-		setStatusMessage("Recuperando informaci�n del sistema", 'I');
+		setStatusMessage("Recuperando informaci�n del sistema", 'I');
 		try {			
 			String fxmlSource = "/com/dotcook/popup/system/SystemInfo.fxml";
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlSource));
@@ -863,5 +869,43 @@ public class Main extends BorderPane{
 		} catch (IOException e) {			
 			e.printStackTrace();
 		}		
+	}
+	
+	public void showDump(Exception ex){
+		
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Excepción");
+		alert.setHeaderText("Una Excepción ha ocurrido");
+		alert.setContentText(ex.getClass() + ": " + ex.getMessage());
+		
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.setMinWidth(500.0);
+		
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		ex.printStackTrace(pw);
+		String exceptionText = sw.toString();
+
+		Label label = new Label("El detalle de la Excepción es el siguiente:");
+
+		TextArea textArea = new TextArea(exceptionText);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+
+		alert.showAndWait();
+		
 	}
 }

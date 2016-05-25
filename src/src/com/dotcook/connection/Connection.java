@@ -3,6 +3,9 @@ package com.dotcook.connection;
 import java.sql.CallableStatement;
 import java.sql.DatabaseMetaData;
 import java.util.Date;
+
+import com.dotcook.main.Main;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -98,7 +101,7 @@ public class Connection {
 		if(conn != null) {
 			try {
 				setStatus(true);
-				setMessage("Conexión establecida");				
+				setMessage("Conexiï¿½n establecida");				
 			}
 			catch(Exception e) {
 				setStatus(false);
@@ -297,6 +300,11 @@ public class Connection {
 
 	public static void setPort(String port) {
 		Connection.port = port;
-	}	
+	}
+	
+	public void launchExceptionDialog(Exception ex){
+		Main root = new com.dotcook.main.Main();
+		root.showDump(ex);
+	}
 
 }

@@ -12,21 +12,23 @@ package com.dotcook.application;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Application extends com.dotcook.connection.Connection{
 	
-	private int idApplication;
-	private String nameApplication;
-	private String description;
-	private String source;
-	private int idCategory;
-	private String nameCategory;
-	private String descriptionCategory;
-	private String controller;
-	private int posApp;
-	private int posCat;
+	private final SimpleIntegerProperty idApplication;
+	private final SimpleStringProperty nameApplication;
+	private final SimpleStringProperty description;
+	private final SimpleStringProperty source;
+	private final SimpleIntegerProperty idCategory;
+	private final SimpleStringProperty nameCategory;
+	private final SimpleStringProperty descriptionCategory;
+	private final SimpleStringProperty controller;
+	private final SimpleIntegerProperty posApp;
+	private final SimpleIntegerProperty posCat;
 	private ObservableList<ToolbarApplication> tool;
 	private ObservableList<ToolbarApplication> toolbarApplication;	
 	
@@ -34,6 +36,16 @@ public class Application extends com.dotcook.connection.Connection{
 	
 	public Application(){
 		super();
+		idApplication       = new SimpleIntegerProperty();
+		nameApplication     = new SimpleStringProperty();
+		description         = new SimpleStringProperty();
+		source              = new SimpleStringProperty();
+		idCategory          = new SimpleIntegerProperty();
+		nameCategory        = new SimpleStringProperty();
+		descriptionCategory = new SimpleStringProperty();
+		controller          = new SimpleStringProperty();
+		posApp              = new SimpleIntegerProperty();
+		posCat              = new SimpleIntegerProperty();
 	}
 	
 	public void setApplications(String idUser){
@@ -120,67 +132,67 @@ public class Application extends com.dotcook.connection.Connection{
 	
 
 	public int getIdApplication() {
-		return idApplication;
+		return idApplication.get();
 	}
 
 	public void setIdApplication(int idApplication) {
-		this.idApplication = idApplication;
+		this.idApplication.set(idApplication);
 	}
 
 	public String getNameApplication() {
-		return nameApplication;
+		return nameApplication.get();
 	}
 
 	public void setNameApplication(String nameApplication) {
-		this.nameApplication = nameApplication;
+		this.nameApplication.set(nameApplication);
 	}
 
 	public String getDescription() {
-		return description;
+		return description.get();
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		this.description.set(description);
 	}
 
 	public String getSource() {
-		return source;
+		return source.get();
 	}
 
 	public void setSource(String source) {
-		this.source = source;
+		this.source.set(source);
 	}
 
 	public int getIdCategory() {
-		return idCategory;
+		return idCategory.get();
 	}
 
 	public void setIdCategory(int idCategory) {
-		this.idCategory = idCategory;
+		this.idCategory.set(idCategory);
 	}
 
 	public String getNameCategory() {
-		return nameCategory;
+		return nameCategory.get();
 	}
 
 	public void setNameCategory(String nameCategory) {
-		this.nameCategory = nameCategory;
+		this.nameCategory.set(nameCategory);
 	}
 
 	public String getDescriptionCategory() {
-		return descriptionCategory;
+		return descriptionCategory.get();
 	}
 
 	public void setDescriptionCategory(String descriptionCategory) {
-		this.descriptionCategory = descriptionCategory;
+		this.descriptionCategory.set(descriptionCategory);
 	}
 
 	public String getController() {
-		return controller;
+		return controller.get();
 	}
 
 	public void setController(String controller) {
-		this.controller = controller;
+		this.controller .set(controller);
 	}
 
 	public ObservableList<ToolbarApplication> getToolbarApplication() {
@@ -200,19 +212,19 @@ public class Application extends com.dotcook.connection.Connection{
 	}
 
 	public int getPosApp() {
-		return posApp;
+		return posApp.get();
 	}
 
 	public void setPosApp(int posApp) {
-		this.posApp = posApp;
+		this.posApp.set(posApp);
 	}
 
 	public int getPosCat() {
-		return posCat;
+		return posCat.get();
 	}
 
 	public void setPosCat(int posCat) {
-		this.posCat = posCat;
+		this.posCat.set(posCat);
 	}
 
 }
