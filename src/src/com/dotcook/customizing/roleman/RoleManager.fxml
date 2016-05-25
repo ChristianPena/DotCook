@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </top>
+   <center>
+      <AnchorPane prefHeight="360.0" prefWidth="648.0" BorderPane.alignment="CENTER">
+         <children>
+            <TitledPane collapsible="false" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" text="Roles y Privilegios" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <content>               	  
+                  <TreeTableView prefHeight="200.0" prefWidth="200.0">
+                     <columns>
+                        <TreeTableColumn editable="false" prefWidth="200.0" resizable="false" text="Nombre" />
+                        <TreeTableColumn editable="false" prefWidth="300.0" resizable="false" text="Descripción" />
+                        <TreeTableColumn prefWidth="138.0" resizable="false" text="Habilitado" />
+                     </columns>                     
+                  </TreeTableView>
+               </content>
+            </TitledPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

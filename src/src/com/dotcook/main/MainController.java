@@ -93,11 +93,11 @@ public class MainController extends ApplicationController {
 								.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/change_password.png"))));		
 		setBtnChgPass(btnChgPass);		
 		
-		Button btnMyUser = new Button("Mi usuario");
+		Button btnMyUser = new Button("Ver mi usuario");
 		btnMyUser.setGraphic(
 				new ImageView(
 						new Image(getClass()
-								.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/user_green.png"))));
+								.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/user.png"))));
 		setBtnMyUser(btnMyUser);		
 		
 		toolBar.getItems().addAll(getBtnChgPass(),getBtnMyUser());
