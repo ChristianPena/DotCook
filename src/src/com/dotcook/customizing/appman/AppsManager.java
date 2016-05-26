@@ -254,7 +254,80 @@ public class AppsManager extends Connection{
 		
 	}
 	
+	public void deleteCategory(Category cat){
+		
+		try{
+			
+			super.openConnection();
+			String sql = "DELETE FROM APPLICATION WHERE ID_CATEGORY = ?";
+			CallableStatement stmt = super.conn.prepareCall(sql);
+			stmt.setInt(1, cat.getIdCategory());
+			stmt.executeUpdate();
+			
+			sql = "DELETE FROM CATEGORY WHERE ID_CATEGORY = ?";
+			CallableStatement stmt2 = super.conn.prepareCall(sql);
+			stmt2.setInt(1, cat.getIdCategory());
+			stmt2.executeUpdate();		
+						
+			super.closeConnection();
+			
+		} catch(Exception ex) {			
+			ex.printStackTrace();
+			launchExceptionDialog(ex);			
+		}		
+	}
 	
+	public void saveCategories(ObservableList<Category> obsCat) {
+		
+		try{
+			
+			int numToInsert = 0;
+			int numToUpdate = 0;
+			
+			String sqlInsert = "INSERT INTO CATEGORY(NAME_CATEGORY,DESCRIPTION,POSITION) VALUES ";			
+			ObservableList<String> sqlUpdate = FXCollections.observableArrayList();
+		
+			for(Category cat: obsCat){
+				
+				if(cat.getIdCategory()>9000){
+					numToInsert++;
+					sqlInsert = sqlInsert + "('" + cat.getNameCategory() +"','" + cat.getDescriptionCategory() 
+								+ "',"+cat.getPositionCategory() + ") ,";
+				}else{
+					numToUpdate++;
+					String upd = "UPDATE CATEGORY SET "
+									+ "NAME_CATEGORY = '" + cat.getNameCategory() + "', "
+									+ "DESCRIPTION   = '" + cat.getDescriptionCategory() + "', "
+									+ "POSITION      = " + cat.getPositionCategory() + ""
+							   + "WHERE ID_CATEGORY = " + cat.getIdCategory() + ";";
+					sqlUpdate.add(upd);
+				}
+				
+			}
+			
+			if(numToInsert>0){
+				
+				sqlInsert = sqlInsert.substring(0,sqlInsert.length() -1);
+				sqlInsert = sqlInsert + ";";
+				
+			}
+			
+			if(numToUpdate>0){
+				
+				for(String sql : sqlUpdate){
+					
+				}
+				
+			}
+			
+		} catch(Exception ex) {			
+			ex.printStackTrace();
+			launchExceptionDialog(ex);			
+		}	
+			
+	
+		
+	}
 
 	public Application getApp() {
 		return app;
@@ -279,5 +352,7 @@ public class AppsManager extends Connection{
 	public void setToolbarApps(ObservableList<ToolbarApplication> toolbarApps) {
 		this.toolbarApps = toolbarApps;
 	}
+
+
 
 }

@@ -8,7 +8,6 @@ import com.dotcook.application.Application;
 import com.dotcook.application.ApplicationController;
 import com.dotcook.application.Category;
 import com.dotcook.application.ToolbarApplication;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +25,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -40,8 +38,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 import javafx.util.Pair;
+import javafx.util.converter.IntegerStringConverter;
 
 public class AppsManagerController extends ApplicationController {
 	
@@ -72,6 +70,8 @@ public class AppsManagerController extends ApplicationController {
 	private ObservableList<String> choiceItems;
 	private ObservableList<ToolbarApplication> toolbarApps;
 	private ObservableList<Category> obsCategories;
+	
+	private AppsManager appMan = new AppsManager();
 		
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
@@ -88,6 +88,14 @@ public class AppsManagerController extends ApplicationController {
 
 	}
 	
+	public AppsManager getAppMan() {
+		return appMan;
+	}
+
+	public void setAppMan(AppsManager appMan) {
+		this.appMan = appMan;
+	}
+
 	public void fillToolbar(){
 		
 		ToolBar toolbar = getToolbar();
@@ -150,7 +158,7 @@ public class AppsManagerController extends ApplicationController {
 		removeApplication.setMinWidth(buttonWidth);
 		setRemoveApplication(removeApplication);
 		
-		Button categories        = new Button("Categorías");
+		Button categories        = new Button("Categorias");
 		categories.setGraphic(
 				new ImageView(
 						new Image(getClass()
@@ -213,17 +221,17 @@ public class AppsManagerController extends ApplicationController {
 		clearInputs();
 		setDisabledForm(false);
 		setEditableForm(true);
-		getRoot(e).setStatusMessage("Ingrese los datos de la nueva aplicación", 'S');
+		getRoot(e).setStatusMessage("Ingrese los datos de la nueva aplicacion", 'S');
 	}
 	
 	public void editApplication(Event e){
 		
 		if(isEditMode()==false){
 			setEditMode(true);
-			getRoot(e).setStatusMessage("Se ha habilitado la edición de la aplicación", 'S');
+			getRoot(e).setStatusMessage("Se ha habilitado la edicion de la aplicacion", 'S');
 		} else {
 			setEditMode(false);
-			getRoot(e).setStatusMessage("Se ha deshabilitado la edición de la aplicación", 'S');
+			getRoot(e).setStatusMessage("Se ha deshabilitado la edicion de la aplicacion", 'S');
 		}
 		
 		setEditableForm(isEditMode());
@@ -233,9 +241,9 @@ public class AppsManagerController extends ApplicationController {
 	public void removeApplication(Event e){
 		
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Eliminar aplicación");
-		alert.setHeaderText("Esta a punto de eliminar una aplicación");
-		alert.setContentText("Â¿EstÃ¡ seguro que desea eliminar la aplicación?");
+		alert.setTitle("Eliminar aplicacion");
+		alert.setHeaderText("Esta a punto de eliminar una aplicacion");
+		alert.setContentText("Â¿EstÃ¡ seguro que desea eliminar la aplicacion?");
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
@@ -244,7 +252,7 @@ public class AppsManagerController extends ApplicationController {
 				try{
 					AppsManager appMan = new AppsManager();
 					if(appMan.deleteApplication(Integer.parseInt(inputIdApplication.getText()))==true){
-						getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');
+						getRoot(e).setStatusMessage("Aplicacion eliminada satisfactoriamente", 'S');
 						clearInputs();
 					} else {
 						getRoot(e).setStatusMessage("Ha ocurrido un error", 'E');
@@ -254,11 +262,11 @@ public class AppsManagerController extends ApplicationController {
 					getRoot(e).showDump(ex);
 				}
 			}else{
-				getRoot(e).setStatusMessage("Debe seleccionar una aplicación primero", 'E');
+				getRoot(e).setStatusMessage("Debe seleccionar una aplicacion primero", 'E');
 			}
-			getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');
+			getRoot(e).setStatusMessage("Aplicacion eliminada satisfactoriamente", 'S');
 		} else {
-			getRoot(e).setStatusMessage("Acción cancelada por el usuario", 'S');
+			getRoot(e).setStatusMessage("Accion cancelada por el usuario", 'S');
 		}	
 		
 	}
@@ -271,14 +279,14 @@ public class AppsManagerController extends ApplicationController {
 			ObservableList<Category> obsCat = getObsCategories();
 			
 			Dialog<Pair<String, String>> dialog = new Dialog<>();
-			dialog.setTitle("Gestión de categorías");
-			dialog.setHeaderText("Listado de categorías");
+			dialog.setTitle("Gestion de categorÃ­as");
+			dialog.setHeaderText("Listado de categorÃ­as");
 	
 			dialog.setGraphic(
 					new ImageView(getClass()
 							.getResource("/com/dotcook/resources/icons/FatCow_Icons32x32/category.png").toString()));
 	
-			ButtonType saveButtonType = new ButtonType("Grabar", ButtonData.OK_DONE);
+			ButtonType saveButtonType = new ButtonType("Aceptar", ButtonData.OK_DONE);
 			dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 			
 			TableView<Category> viewCats = new TableView<Category>();
@@ -290,7 +298,7 @@ public class AppsManagerController extends ApplicationController {
 			colIdCategory.setCellValueFactory(
 					new PropertyValueFactory<Category,String>("idCategory"));
 			
-			TableColumn colNameCategory = new TableColumn<Category, String>("Nombre Categoría");
+			TableColumn colNameCategory = new TableColumn<Category, String>("Nombre CategorÃ­a");
 			colNameCategory.setEditable(true);
 			colNameCategory.setMinWidth(150);
 			colNameCategory.setCellValueFactory(
@@ -307,7 +315,7 @@ public class AppsManagerController extends ApplicationController {
 		            }
 		    );
 			
-			TableColumn colDescription = new TableColumn<Category, String>("Descripción");
+			TableColumn colDescription = new TableColumn<Category, String>("Descripcion");
 			colDescription.setMinWidth(50);
 			colDescription.setCellValueFactory(
 					new PropertyValueFactory<Category,String>("descriptionCategory"));
@@ -323,18 +331,10 @@ public class AppsManagerController extends ApplicationController {
 		            }
 		    );
 			
-			TableColumn<Category,Integer> colPosition = new TableColumn<Category, Integer>("Posición");
+			TableColumn<Category,Integer> colPosition = new TableColumn<Category,Integer>("Posicion");
 			colPosition.setMinWidth(50);
-			colPosition.setCellValueFactory(
-					new PropertyValueFactory<Category,Integer>("positionCategory"));
-//			colPosition.setCellFactory(cellData -> cellData.getv
-//			colPosition.setCellFactory(new Callback<TableColumn<Category,Integer>, TableCell<Category,Integer>>() {				
-//				@Override
-//				public TableCell<Category, Integer> call(TableColumn<Category, Integer> param) {
-//					param.set
-//					return null;
-//				}
-//			});
+			colPosition.setCellValueFactory(new PropertyValueFactory<Category,Integer>("positionCategory"));
+			colPosition.setCellFactory(TextFieldTableCell.<Category, Integer>forTableColumn(new IntegerStringConverter()));
 			colPosition.setOnEditCommit(
 		            new EventHandler<CellEditEvent<Category, Integer>>() {
 		                @Override
@@ -351,17 +351,57 @@ public class AppsManagerController extends ApplicationController {
 			
 			BorderPane borderPane = new BorderPane();
 			
+			Button save = new Button("Grabar",
+					new ImageView(new Image(getClass()
+							.getResourceAsStream("/com/dotcook/resources/icons/save_16x16.png"))));
+			save.setMinWidth(100);
+			save.setOnAction(new EventHandler<ActionEvent>(){
+				@Override
+				public void handle(ActionEvent event) {
+					getAppMan().saveCategories(obsCat);
+					getRoot(e).setStatusMessage("Accion ejecutada sin errores", 'S');
+				}				
+			});
+			
 			Button newRow = new Button("Nueva",
 					new ImageView(new Image(getClass()
 							.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/table_row_insert.png"))));
 			newRow.setMinWidth(100);
+			newRow.setOnAction(new EventHandler<ActionEvent>(){
+				int idNewApp = 9000;
+				@Override
+				public void handle(ActionEvent event){
+					Category newCat = new Category();
+					idNewApp++;
+					newCat.setIdCategory(idNewApp);
+					obsCat.add(newCat);
+				}
+			});
 			
 			Button delRow = new Button("Eliminar",
 					new ImageView(new Image(getClass()
 							.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/table_row_delete.png"))));
 			delRow.setMinWidth(100);
+			delRow.setOnAction(new EventHandler<ActionEvent>(){
+				@Override
+				public void handle(ActionEvent event){
+					Alert alert = new Alert(AlertType.WARNING);
+					alert.setTitle("Eliminar categorÃ­a");
+					alert.setHeaderText("Si elimina una categorÃ­a, eliminarÃ¡ tambien las aplicaciones asociadas");
+					alert.setContentText("Â¿EstÃ¡s seguro que deseas continuar?");
+
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() == ButtonType.OK){
+					    getAppMan().deleteCategory(viewCats.getSelectionModel().getSelectedItem());
+					    getRoot(e).setStatusMessage("Accion ejecutada sin errores", 'S');
+					    obsCat.remove(viewCats.getSelectionModel().getSelectedItem());
+					}else{
+						getRoot(e).setStatusMessage("Accion cancelada por el usuario", 'S');
+					}
+				}
+			});
 			
-			borderPane.setTop(new ToolBar(newRow,delRow));
+			borderPane.setTop(new ToolBar(save,newRow,delRow));
 			borderPane.setCenter(viewCats);
 			
 			dialog.getDialogPane().setContent(borderPane);
@@ -369,8 +409,6 @@ public class AppsManagerController extends ApplicationController {
 			Platform.runLater(() -> viewCats.requestFocus());
 			
 			dialog.show();
-			
-			getRoot(e).setStatusMessage("Categories Pressed!", 'S');
 		
 		} catch(Exception ex){
 			
@@ -503,7 +541,7 @@ public class AppsManagerController extends ApplicationController {
 			
 			if(result==true){
 				if(mode=='I')				
-					getRoot(e).setStatusMessage("Se ha agregado una nueva aplicación satisfactoriamente", 'S');
+					getRoot(e).setStatusMessage("Se ha agregado una nueva aplicacion satisfactoriamente", 'S');
 				if(mode=='U')
 					getRoot(e).setStatusMessage("Cambios grabados satisfactoriamente", 'S');
 			} else {
@@ -528,7 +566,7 @@ public class AppsManagerController extends ApplicationController {
 	public void actionSearch(ActionEvent e){
 		Dialog<Pair<String,String>> dialog = new Dialog<>();
 		dialog.setTitle("Buscar AplicaciÃ³n...");
-		dialog.setHeaderText("Ingresa los parametros de búsqueda");
+		dialog.setHeaderText("Ingresa los parametros de bï¿½squeda");
 		
 		dialog.setGraphic(new ImageView(getClass().getResource("/com/dotcook/resources/icons/search_32x32.png").toString()));
 		
@@ -541,14 +579,14 @@ public class AppsManagerController extends ApplicationController {
 		grid.setPadding(new Insets(20,150,10,10));
 		
 		TextField appName = new TextField();
-		appName.setPromptText("Nombre de la aplicación");
+		appName.setPromptText("Nombre de la aplicaciï¿½n");
 		
 		TextField description = new TextField();
-		description.setPromptText("Descripción");
+		description.setPromptText("Descripciï¿½n");
 		
 		grid.add(new Label("Nombre:"), 0, 0);
 		grid.add(appName, 1, 0);
-		grid.add(new Label("Descripción:"), 0, 1);
+		grid.add(new Label("Descripciï¿½n:"), 0, 1);
 		grid.add(description, 1, 1);
 		
 		dialog.getDialogPane().setContent(grid);
@@ -570,9 +608,9 @@ public class AppsManagerController extends ApplicationController {
 			app = appMan.searchApplication(appName.getText(), description.getText());
 			if(app != null){
 				fillScreenAppData(app);
-				getRoot(e).setStatusMessage("Búsqueda exitosa", 'S');				
+				getRoot(e).setStatusMessage("Bï¿½squeda exitosa", 'S');				
 			} else{
-				getRoot(e).setStatusMessage("No se encontró ninguna aplicación con los parámetros ingresados", 'E');
+				getRoot(e).setStatusMessage("No se encontrï¿½ ninguna aplicaciï¿½n con los parï¿½metros ingresados", 'E');
 			}
 		});
 		
@@ -651,22 +689,22 @@ public class AppsManagerController extends ApplicationController {
 			colIdApplication.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("idApplication"));
 			
-			TableColumn colNameApplication = new TableColumn<Application, String>("Nom.Aplicación");
+			TableColumn colNameApplication = new TableColumn<Application, String>("Nombre Aplicacion");
 			colNameApplication.setMinWidth(150);
 			colNameApplication.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("nameApplication"));
 			
-			TableColumn colDescApplication = new TableColumn<Application, String>("Desc.Aplicación");
+			TableColumn colDescApplication = new TableColumn<Application, String>("Descripcion Aplicacion");
 			colDescApplication.setMinWidth(200);
 			colDescApplication.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("description"));
 			
-			TableColumn colCategory = new TableColumn<Application, String>("Categoría");
+			TableColumn colCategory = new TableColumn<Application, String>("Categoria");
 			colCategory.setMinWidth(200);
 			colCategory.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("descriptionCategory"));
 			
-			TableColumn colPosApp = new TableColumn<Application, String>("Posición");
+			TableColumn colPosApp = new TableColumn<Application, String>("Posicion");
 			colPosApp.setMinWidth(50);
 			colPosApp.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("posApp"));
