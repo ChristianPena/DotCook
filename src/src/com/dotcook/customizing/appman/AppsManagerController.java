@@ -26,16 +26,21 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 import javafx.util.Pair;
 
 public class AppsManagerController extends ApplicationController {
@@ -46,6 +51,7 @@ public class AppsManagerController extends ApplicationController {
 	private Button editApplication;
 	private Button removeApplication;
 	private Button categories;
+	private Button refresh;
 	
 	@FXML TextField inputIdApplication;
 	@FXML TextField inputNameApplication;
@@ -94,7 +100,8 @@ public class AppsManagerController extends ApplicationController {
 								  getEditApplication(),
 								  getRemoveApplication(),
 								  new Separator(),
-								  getCategories());
+								  getCategories(),
+								  getRefresh());
 		
 		setToolbar(toolbar);
 		
@@ -143,13 +150,21 @@ public class AppsManagerController extends ApplicationController {
 		removeApplication.setMinWidth(buttonWidth);
 		setRemoveApplication(removeApplication);
 		
-		Button categories        = new Button("CategorÃ­as");
+		Button categories        = new Button("Categorías");
 		categories.setGraphic(
 				new ImageView(
 						new Image(getClass()
 								.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/category.png"))));
 		categories.setMinWidth(buttonWidth);
 		setCategories(categories);
+		
+		Button refresh           = new Button("Actualizar");
+		refresh.setGraphic(
+				new ImageView(
+						new Image(getClass()
+								.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/arrow_refresh.png"))));
+		refresh.setMinWidth(buttonWidth);
+		setRefresh(refresh);
 				
 	}
 	
@@ -174,6 +189,9 @@ public class AppsManagerController extends ApplicationController {
 					
 					if(btnPressed.getText().equals(getCategories().getText()))
 						showCategories(e);
+					
+					if(btnPressed.getText().equals(getRefresh().getText()))
+						refresh(e);
 				
 				}catch(Exception ex){
 					ex.printStackTrace();
@@ -187,6 +205,7 @@ public class AppsManagerController extends ApplicationController {
 		getEditApplication().setOnAction(eHandler);
 		getRemoveApplication().setOnAction(eHandler);
 		getCategories().setOnAction(eHandler);
+		getRefresh().setOnAction(eHandler);
 		
 	}
 	
@@ -194,17 +213,17 @@ public class AppsManagerController extends ApplicationController {
 		clearInputs();
 		setDisabledForm(false);
 		setEditableForm(true);
-		getRoot(e).setStatusMessage("Ingrese los datos de la nueva aplicaciÃ³n", 'S');
+		getRoot(e).setStatusMessage("Ingrese los datos de la nueva aplicación", 'S');
 	}
 	
 	public void editApplication(Event e){
 		
 		if(isEditMode()==false){
 			setEditMode(true);
-			getRoot(e).setStatusMessage("Se ha habilitado la ediciÃ³n de la aplicaciÃ³n", 'S');
+			getRoot(e).setStatusMessage("Se ha habilitado la edición de la aplicación", 'S');
 		} else {
 			setEditMode(false);
-			getRoot(e).setStatusMessage("Se ha deshabilitado la ediciÃ³n de la aplicaciÃ³n", 'S');
+			getRoot(e).setStatusMessage("Se ha deshabilitado la edición de la aplicación", 'S');
 		}
 		
 		setEditableForm(isEditMode());
@@ -214,9 +233,9 @@ public class AppsManagerController extends ApplicationController {
 	public void removeApplication(Event e){
 		
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Eliminar aplicaciÃ³n");
-		alert.setHeaderText("Esta a punto de eliminar una aplicaciÃ³n");
-		alert.setContentText("Â¿EstÃ¡ seguro que desea eliminar la aplicaciÃ³n?");
+		alert.setTitle("Eliminar aplicación");
+		alert.setHeaderText("Esta a punto de eliminar una aplicación");
+		alert.setContentText("Â¿EstÃ¡ seguro que desea eliminar la aplicación?");
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
@@ -225,7 +244,7 @@ public class AppsManagerController extends ApplicationController {
 				try{
 					AppsManager appMan = new AppsManager();
 					if(appMan.deleteApplication(Integer.parseInt(inputIdApplication.getText()))==true){
-						getRoot(e).setStatusMessage("AplicaciÃ³n eliminada satisfactoriamente", 'S');
+						getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');
 						clearInputs();
 					} else {
 						getRoot(e).setStatusMessage("Ha ocurrido un error", 'E');
@@ -235,17 +254,139 @@ public class AppsManagerController extends ApplicationController {
 					getRoot(e).showDump(ex);
 				}
 			}else{
-				getRoot(e).setStatusMessage("Debe seleccionar una aplicaciÃ³n primero", 'E');
+				getRoot(e).setStatusMessage("Debe seleccionar una aplicación primero", 'E');
 			}
-			getRoot(e).setStatusMessage("AplicaciÃ³n eliminada satisfactoriamente", 'S');
+			getRoot(e).setStatusMessage("Aplicación eliminada satisfactoriamente", 'S');
 		} else {
-			getRoot(e).setStatusMessage("AcciÃ³n cancelada por el usuario", 'S');
+			getRoot(e).setStatusMessage("Acción cancelada por el usuario", 'S');
 		}	
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void showCategories(Event e){
-		getRoot(e).setStatusMessage("Categories Pressed!", 'S');
+		
+		try{
+			
+			ObservableList<Category> obsCat = getObsCategories();
+			
+			Dialog<Pair<String, String>> dialog = new Dialog<>();
+			dialog.setTitle("Gestión de categorías");
+			dialog.setHeaderText("Listado de categorías");
+	
+			dialog.setGraphic(
+					new ImageView(getClass()
+							.getResource("/com/dotcook/resources/icons/FatCow_Icons32x32/category.png").toString()));
+	
+			ButtonType saveButtonType = new ButtonType("Grabar", ButtonData.OK_DONE);
+			dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+			
+			TableView<Category> viewCats = new TableView<Category>();
+			
+			viewCats.setEditable(true);
+			
+			TableColumn colIdCategory = new TableColumn<Category, String>("ID Cat.");
+			colIdCategory.setMinWidth(50);
+			colIdCategory.setCellValueFactory(
+					new PropertyValueFactory<Category,String>("idCategory"));
+			
+			TableColumn colNameCategory = new TableColumn<Category, String>("Nombre Categoría");
+			colNameCategory.setEditable(true);
+			colNameCategory.setMinWidth(150);
+			colNameCategory.setCellValueFactory(
+					new PropertyValueFactory<Category,String>("nameCategory"));
+			colNameCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+			colNameCategory.setOnEditCommit(
+		            new EventHandler<CellEditEvent<Category, String>>() {
+		                @Override
+		                public void handle(CellEditEvent<Category, String> t) {
+		                    ((Category) t.getTableView().getItems().get(
+		                            t.getTablePosition().getRow())
+		                            ).setNameCategory(t.getNewValue());
+		                }
+		            }
+		    );
+			
+			TableColumn colDescription = new TableColumn<Category, String>("Descripción");
+			colDescription.setMinWidth(50);
+			colDescription.setCellValueFactory(
+					new PropertyValueFactory<Category,String>("descriptionCategory"));
+			colDescription.setCellFactory(TextFieldTableCell.forTableColumn());
+			colDescription.setOnEditCommit(
+		            new EventHandler<CellEditEvent<Category, String>>() {
+		                @Override
+		                public void handle(CellEditEvent<Category, String> t) {
+		                    ((Category) t.getTableView().getItems().get(
+		                            t.getTablePosition().getRow())
+		                            ).setDescriptionCategory(t.getNewValue());
+		                }
+		            }
+		    );
+			
+			TableColumn<Category,Integer> colPosition = new TableColumn<Category, Integer>("Posición");
+			colPosition.setMinWidth(50);
+			colPosition.setCellValueFactory(
+					new PropertyValueFactory<Category,Integer>("positionCategory"));
+//			colPosition.setCellFactory(cellData -> cellData.getv
+//			colPosition.setCellFactory(new Callback<TableColumn<Category,Integer>, TableCell<Category,Integer>>() {				
+//				@Override
+//				public TableCell<Category, Integer> call(TableColumn<Category, Integer> param) {
+//					param.set
+//					return null;
+//				}
+//			});
+			colPosition.setOnEditCommit(
+		            new EventHandler<CellEditEvent<Category, Integer>>() {
+		                @Override
+		                public void handle(CellEditEvent<Category, Integer> t) {
+		                    ((Category) t.getTableView().getItems().get(
+		                            t.getTablePosition().getRow())
+		                            ).setPositionCategory(t.getNewValue());
+		                }
+		            }
+		    );
+			
+			viewCats.setItems(obsCat);
+			viewCats.getColumns().addAll(colIdCategory,colNameCategory,colDescription,colPosition);
+			
+			BorderPane borderPane = new BorderPane();
+			
+			Button newRow = new Button("Nueva",
+					new ImageView(new Image(getClass()
+							.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/table_row_insert.png"))));
+			newRow.setMinWidth(100);
+			
+			Button delRow = new Button("Eliminar",
+					new ImageView(new Image(getClass()
+							.getResourceAsStream("/com/dotcook/resources/icons/FatCow_Icons16x16/table_row_delete.png"))));
+			delRow.setMinWidth(100);
+			
+			borderPane.setTop(new ToolBar(newRow,delRow));
+			borderPane.setCenter(viewCats);
+			
+			dialog.getDialogPane().setContent(borderPane);
+			
+			Platform.runLater(() -> viewCats.requestFocus());
+			
+			dialog.show();
+			
+			getRoot(e).setStatusMessage("Categories Pressed!", 'S');
+		
+		} catch(Exception ex){
+			
+			ex.printStackTrace();
+			getRoot(e).showDump(ex);
+			
+		}
+		
+	}
+	
+	public void refresh(Event e){
+		
+		fillChoiceCategory();
+		fillViewApplications();
+		getRoot(e).setStatusMessage("Se han actualizado los datos", 'S');
+		
 	}
 	
 	public void setDisabledForm(boolean option){
@@ -362,7 +503,7 @@ public class AppsManagerController extends ApplicationController {
 			
 			if(result==true){
 				if(mode=='I')				
-					getRoot(e).setStatusMessage("Se ha agregado una nueva aplicaciÃ³n satisfactoriamente", 'S');
+					getRoot(e).setStatusMessage("Se ha agregado una nueva aplicación satisfactoriamente", 'S');
 				if(mode=='U')
 					getRoot(e).setStatusMessage("Cambios grabados satisfactoriamente", 'S');
 			} else {
@@ -387,7 +528,7 @@ public class AppsManagerController extends ApplicationController {
 	public void actionSearch(ActionEvent e){
 		Dialog<Pair<String,String>> dialog = new Dialog<>();
 		dialog.setTitle("Buscar AplicaciÃ³n...");
-		dialog.setHeaderText("Ingresa los parametros de bÃºsqueda");
+		dialog.setHeaderText("Ingresa los parametros de búsqueda");
 		
 		dialog.setGraphic(new ImageView(getClass().getResource("/com/dotcook/resources/icons/search_32x32.png").toString()));
 		
@@ -400,14 +541,14 @@ public class AppsManagerController extends ApplicationController {
 		grid.setPadding(new Insets(20,150,10,10));
 		
 		TextField appName = new TextField();
-		appName.setPromptText("Nombre de la aplicaciÃ³n");
+		appName.setPromptText("Nombre de la aplicación");
 		
 		TextField description = new TextField();
-		description.setPromptText("DescripciÃ³n");
+		description.setPromptText("Descripción");
 		
 		grid.add(new Label("Nombre:"), 0, 0);
 		grid.add(appName, 1, 0);
-		grid.add(new Label("DescripciÃ³n:"), 0, 1);
+		grid.add(new Label("Descripción:"), 0, 1);
 		grid.add(description, 1, 1);
 		
 		dialog.getDialogPane().setContent(grid);
@@ -429,9 +570,9 @@ public class AppsManagerController extends ApplicationController {
 			app = appMan.searchApplication(appName.getText(), description.getText());
 			if(app != null){
 				fillScreenAppData(app);
-				getRoot(e).setStatusMessage("BÃºsqueda exitosa", 'S');				
+				getRoot(e).setStatusMessage("Búsqueda exitosa", 'S');				
 			} else{
-				getRoot(e).setStatusMessage("No se encontrÃ³ ninguna aplicaciÃ³n con los parÃ¡metros ingresados", 'E');
+				getRoot(e).setStatusMessage("No se encontró ninguna aplicación con los parámetros ingresados", 'E');
 			}
 		});
 		
@@ -439,7 +580,7 @@ public class AppsManagerController extends ApplicationController {
 	
 	public void fillScreenAppData(Application app){
 		
-		inputIdApplication.setText(app.getIdApplication()+"");
+		inputIdApplication.setText(String.valueOf(app.getIdApplication()));
 		inputNameApplication.setText(app.getNameApplication());
 		inputDescription.setText(app.getDescription());
 		inputSource.setText(app.getSource());
@@ -510,28 +651,39 @@ public class AppsManagerController extends ApplicationController {
 			colIdApplication.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("idApplication"));
 			
-			TableColumn colNameApplication = new TableColumn<Application, String>("Nom.AplicaciÃ³n");
+			TableColumn colNameApplication = new TableColumn<Application, String>("Nom.Aplicación");
 			colNameApplication.setMinWidth(150);
 			colNameApplication.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("nameApplication"));
 			
-			TableColumn colDescApplication = new TableColumn<Application, String>("Desc.AplicaciÃ³n");
+			TableColumn colDescApplication = new TableColumn<Application, String>("Desc.Aplicación");
 			colDescApplication.setMinWidth(200);
 			colDescApplication.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("description"));
 			
-			TableColumn colCategory = new TableColumn<Application, String>("CategorÃ­a");
+			TableColumn colCategory = new TableColumn<Application, String>("Categoría");
 			colCategory.setMinWidth(200);
 			colCategory.setCellValueFactory(
 	                new PropertyValueFactory<Application, String>("descriptionCategory"));
 			
-			TableColumn colPosApp = new TableColumn<Application, String>("PosiciÃ³n");
+			TableColumn colPosApp = new TableColumn<Application, String>("Posición");
 			colPosApp.setMinWidth(50);
 			colPosApp.setCellValueFactory(
-	                new PropertyValueFactory<Application, String>("posApp"));			
+	                new PropertyValueFactory<Application, String>("posApp"));
+			
+			TableColumn colSource = new TableColumn<Application, String>("Vista");
+			colSource.setMinWidth(400);
+			colSource.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("source"));
+			
+			TableColumn colController = new TableColumn<Application, String>("Controlador");
+			colController.setMinWidth(400);
+			colController.setCellValueFactory(
+	                new PropertyValueFactory<Application, String>("controller"));
 			
 			viewApplications.setItems(allApps);
-			viewApplications.getColumns().addAll(colIdApplication,colNameApplication,colDescApplication,colCategory,colPosApp);
+			viewApplications.getColumns().addAll(colIdApplication,colNameApplication,colDescApplication,
+													colCategory,colPosApp,colSource,colController);
 			
 			viewApplications.setOnMouseClicked(new EventHandler<MouseEvent>(){
 				@Override
@@ -589,6 +741,14 @@ public class AppsManagerController extends ApplicationController {
 
 	public void setCategories(Button categories) {
 		this.categories = categories;
+	}
+
+	public Button getRefresh() {
+		return refresh;
+	}
+
+	public void setRefresh(Button refresh) {
+		this.refresh = refresh;
 	}
 
 	public boolean isEditMode() {

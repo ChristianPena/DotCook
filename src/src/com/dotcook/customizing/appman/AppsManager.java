@@ -253,6 +253,8 @@ public class AppsManager extends Connection{
 		return allApps;
 		
 	}
+	
+	
 
 	public Application getApp() {
 		return app;
