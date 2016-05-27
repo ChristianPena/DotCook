@@ -24,6 +24,11 @@ public class RoleManager extends Connection{
 	private SimpleStringProperty nameApplication;
 	private SimpleStringProperty descriptionApplication;
 	
+	private SimpleIntegerProperty idRow;
+	private SimpleStringProperty nameRow;
+	private SimpleStringProperty descriptionRow;
+	private SimpleStringProperty typeRow;
+	
 	private ObservableList<RoleManager> obsRoleMan;
 	
 	public RoleManager(){
@@ -39,6 +44,11 @@ public class RoleManager extends Connection{
 		idApplication = new SimpleIntegerProperty();
 		nameApplication = new SimpleStringProperty();
 		descriptionApplication = new SimpleStringProperty();
+		
+		idRow = new SimpleIntegerProperty();
+		nameRow = new SimpleStringProperty();
+		descriptionRow = new SimpleStringProperty();
+		typeRow = new SimpleStringProperty();
 		
 	}
 
@@ -73,6 +83,93 @@ public class RoleManager extends Connection{
 			ex.printStackTrace();
 			launchExceptionDialog(ex);
 		}
+		
+	}
+	
+	public ObservableList<RoleManager> getListRoles(){
+		
+		try{
+			
+			ObservableList<RoleManager> list = FXCollections.observableArrayList();
+			
+			int idRole = 0;
+			int idPrivilege = 0;
+			int idApplication = 0;
+			for(RoleManager roleMan : getObsRoleMan()){
+				
+				if(roleMan.getIdRole() > idRole){
+					idRole = roleMan.getIdRole();
+					RoleManager roleRow = new RoleManager();
+					roleRow.setIdRow(roleMan.getIdRole());
+					roleRow.setNameRow(roleMan.getNameRole());
+					roleRow.setDescriptionRow(roleMan.getDescriptionRole());
+					roleRow.setTypeRow("ROLE");
+					
+					roleRow.setIdRole(roleMan.getIdRole());
+					roleRow.setNameRole(roleMan.getNameRole());
+					roleRow.setDescriptionRole(roleMan.getDescriptionRole());
+					roleRow.setIdPrivilege(roleMan.getIdPrivilege());
+					roleRow.setNamePrivilege(roleMan.getNamePrivilege());
+					roleRow.setDescriptionPrivilege(roleMan.getDescriptionPrivilege());
+					roleRow.setIdApplication(roleMan.getIdApplication());
+					roleRow.setNameApplication(roleMan.getNameApplication());
+					roleRow.setDescriptionApplication(roleMan.getDescriptionApplication());
+					
+					list.add(roleRow);
+					idPrivilege = 0;
+				}
+				
+				if((roleMan.getIdRole() == idRole)&&(roleMan.getIdPrivilege() > idPrivilege)){
+					idPrivilege = roleMan.getIdPrivilege();
+					RoleManager privilegeRow = new RoleManager();
+					privilegeRow.setIdRow(roleMan.getIdPrivilege());
+					privilegeRow.setNameRow(roleMan.getNamePrivilege());
+					privilegeRow.setDescriptionRow(roleMan.getDescriptionPrivilege());
+					privilegeRow.setTypeRow("PRIVILEGE");
+					
+					privilegeRow.setIdRole(roleMan.getIdRole());
+					privilegeRow.setNameRole(roleMan.getNameRole());
+					privilegeRow.setDescriptionRole(roleMan.getDescriptionRole());
+					privilegeRow.setIdPrivilege(roleMan.getIdPrivilege());
+					privilegeRow.setNamePrivilege(roleMan.getNamePrivilege());
+					privilegeRow.setDescriptionPrivilege(roleMan.getDescriptionPrivilege());
+					privilegeRow.setIdApplication(roleMan.getIdApplication());
+					privilegeRow.setNameApplication(roleMan.getNameApplication());
+					privilegeRow.setDescriptionApplication(roleMan.getDescriptionApplication());
+					
+					list.add(privilegeRow);
+					idApplication = 0;
+				}
+				
+				if((roleMan.getIdRole() == idRole)&&(roleMan.getIdPrivilege() == idPrivilege)&&(roleMan.getIdApplication() > idApplication)){
+					idApplication = roleMan.getIdApplication();
+					RoleManager applicationRow = new RoleManager();
+					applicationRow.setIdRow(roleMan.getIdApplication());
+					applicationRow.setNameRow(roleMan.getNameApplication());
+					applicationRow.setDescriptionRow(roleMan.getDescriptionApplication());
+					applicationRow.setTypeRow("APPLICATION");
+					
+					applicationRow.setIdRole(roleMan.getIdRole());
+					applicationRow.setNameRole(roleMan.getNameRole());
+					applicationRow.setDescriptionRole(roleMan.getDescriptionRole());
+					applicationRow.setIdPrivilege(roleMan.getIdPrivilege());
+					applicationRow.setNamePrivilege(roleMan.getNamePrivilege());
+					applicationRow.setDescriptionPrivilege(roleMan.getDescriptionPrivilege());
+					applicationRow.setIdApplication(roleMan.getIdApplication());
+					applicationRow.setNameApplication(roleMan.getNameApplication());
+					applicationRow.setDescriptionApplication(roleMan.getDescriptionApplication());
+					
+					list.add(applicationRow);
+				}				
+			}
+			
+			return list;
+			
+		} catch(Exception ex){
+			ex.printStackTrace();
+			launchExceptionDialog(ex);
+			return null;			
+		}		
 		
 	}
 
@@ -155,5 +252,39 @@ public class RoleManager extends Connection{
 	public void setObsRoleMan(ObservableList<RoleManager> obsRoleMan) {
 		this.obsRoleMan = obsRoleMan;
 	}
+	
+	public Integer getIdRow() {
+		return idRow.get();
+	}
+
+	public void setIdRow(Integer idRow) {
+		this.idRow.set(idRow);
+	}
+
+	public String getNameRow() {
+		return nameRow.get();
+	}
+
+	public void setNameRow(String nameRow) {
+		this.nameRow.set(nameRow);
+	}
+
+	public String getDescriptionRow() {
+		return descriptionRow.get();
+	}
+
+	public void setDescriptionRow(String descriptionRow) {
+		this.descriptionRow.set(descriptionRow);
+	}
+	
+	public String getTypeRow() {
+		return typeRow.get();
+	}
+
+	public void setTypeRow(String typeRow) {
+		this.typeRow.set(typeRow);
+	}
+	
+	
 
 }
