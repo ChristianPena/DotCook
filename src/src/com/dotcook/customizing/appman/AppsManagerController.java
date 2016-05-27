@@ -279,8 +279,8 @@ public class AppsManagerController extends ApplicationController {
 			ObservableList<Category> obsCat = getObsCategories();
 			
 			Dialog<Pair<String, String>> dialog = new Dialog<>();
-			dialog.setTitle("Gestion de categorías");
-			dialog.setHeaderText("Listado de categorías");
+			dialog.setTitle("Gestion de categorias");
+			dialog.setHeaderText("Listado de categorias");
 	
 			dialog.setGraphic(
 					new ImageView(getClass()
@@ -298,7 +298,7 @@ public class AppsManagerController extends ApplicationController {
 			colIdCategory.setCellValueFactory(
 					new PropertyValueFactory<Category,String>("idCategory"));
 			
-			TableColumn colNameCategory = new TableColumn<Category, String>("Nombre Categoría");
+			TableColumn colNameCategory = new TableColumn<Category, String>("Nombre Categoria");
 			colNameCategory.setEditable(true);
 			colNameCategory.setMinWidth(150);
 			colNameCategory.setCellValueFactory(
@@ -360,6 +360,8 @@ public class AppsManagerController extends ApplicationController {
 				public void handle(ActionEvent event) {
 					getAppMan().saveCategories(obsCat);
 					getRoot(e).setStatusMessage("Accion ejecutada sin errores", 'S');
+					getRoot(e).setApps();
+					refresh(e);
 				}				
 			});
 			
@@ -386,15 +388,16 @@ public class AppsManagerController extends ApplicationController {
 				@Override
 				public void handle(ActionEvent event){
 					Alert alert = new Alert(AlertType.WARNING);
-					alert.setTitle("Eliminar categoría");
-					alert.setHeaderText("Si elimina una categoría, eliminará tambien las aplicaciones asociadas");
-					alert.setContentText("¿Estás seguro que deseas continuar?");
+					alert.setTitle("Eliminar categoria");
+					alert.setHeaderText("Si elimina una categoria, eliminara tambien las aplicaciones asociadas");
+					alert.setContentText("�Estas seguro que deseas continuar?");
 
 					Optional<ButtonType> result = alert.showAndWait();
 					if (result.get() == ButtonType.OK){
 					    getAppMan().deleteCategory(viewCats.getSelectionModel().getSelectedItem());
 					    getRoot(e).setStatusMessage("Accion ejecutada sin errores", 'S');
 					    obsCat.remove(viewCats.getSelectionModel().getSelectedItem());
+					    refresh(e);
 					}else{
 						getRoot(e).setStatusMessage("Accion cancelada por el usuario", 'S');
 					}
@@ -544,6 +547,7 @@ public class AppsManagerController extends ApplicationController {
 					getRoot(e).setStatusMessage("Se ha agregado una nueva aplicacion satisfactoriamente", 'S');
 				if(mode=='U')
 					getRoot(e).setStatusMessage("Cambios grabados satisfactoriamente", 'S');
+				    getRoot(e).setApps();
 			} else {
 				getRoot(e).setStatusMessage("Ha ocurrido un error", 'E');			
 			}

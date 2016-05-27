@@ -298,7 +298,7 @@ public class AppsManager extends Connection{
 					String upd = "UPDATE CATEGORY SET "
 									+ "NAME_CATEGORY = '" + cat.getNameCategory() + "', "
 									+ "DESCRIPTION   = '" + cat.getDescriptionCategory() + "', "
-									+ "POSITION      = " + cat.getPositionCategory() + ""
+									+ "POSITION      = " + cat.getPositionCategory() + " "
 							   + "WHERE ID_CATEGORY = " + cat.getIdCategory() + ";";
 					sqlUpdate.add(upd);
 				}
@@ -310,13 +310,23 @@ public class AppsManager extends Connection{
 				sqlInsert = sqlInsert.substring(0,sqlInsert.length() -1);
 				sqlInsert = sqlInsert + ";";
 				
+				super.openConnection();
+				CallableStatement stmt = super.conn.prepareCall(sqlInsert);
+				stmt.executeUpdate();
+				super.closeConnection();
+				
 			}
 			
 			if(numToUpdate>0){
 				
-				for(String sql : sqlUpdate){
-					
+				super.openConnection();
+				
+				for(String sql : sqlUpdate){					
+					CallableStatement stmt = super.conn.prepareCall(sql);
+					stmt.executeUpdate();
 				}
+				
+				super.closeConnection();
 				
 			}
 			
